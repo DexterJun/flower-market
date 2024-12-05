@@ -17,7 +17,7 @@
 
       <section class="section section-contact">
         <h2>联系我们</h2>
-        <p>招商热线：xxx-xxxxxxxx</p>
+        <p>招商热线：13681113555</p>
         <p>地址：北京市朝阳区东风南路898号</p>
         <van-button type="primary" block @click="showToast('感谢您的关注，我们会尽快与您联系！')">
           立即咨询
