@@ -8,7 +8,9 @@
   },
   "dependencies": {
     "vant": "^4.8.5",
-    "vue": "^3.4.21"
+    "vue": "^3.4.21",
+    "vue-masonry-wall": "^0.3.2",
+    "vue-router": "4"
   },
   "devDependencies": {
     "@vant/auto-import-resolver": "^1.1.0",

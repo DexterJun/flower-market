@@ -3,7 +3,7 @@
     <van-nav-bar title="898艺术园区花卉市场招商" fixed />
     
     <div class="content">
-      <img style="width: 100%;" src="../assets/images/bg.png" alt="">
+      <img style="width: 100%;" src="../../../assets/images/bg.png" alt="">
       
       <section v-for="(section, index) in sections" :key="index" :class="['section', `section-${index + 1}`]">
         <h2>{{ section.title }}</h2>

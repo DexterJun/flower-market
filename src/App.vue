@@ -1,50 +1,17 @@
 <template>
-  <div class="goods">
-    <Home />
+  <div id="app">
+    <router-view></router-view>
   </div>
 </template>
 
-<script setup>
-import Home from './views/index.vue'
+<script lang="ts" setup>
 </script>
 
-<style lang="less">
-body {
-  font-size: 16px;
-  background-color: #f8f8f8;
+<style>
+#app {
+  font-family: Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-}
-
-.goods {
-  padding-bottom: 50px;
-
-  &-swipe {
-    img {
-      width: 100%;
-      display: block;
-    }
-  }
-
-  &-title {
-    font-size: 16px;
-  }
-
-  &-price {
-    color: #f44;
-  }
-
-  &-express {
-    color: #999;
-    font-size: 12px;
-    padding: 5px 15px;
-  }
-
-  &-cell-group {
-    margin: 15px 0;
-  }
-
-  &-tag {
-    margin-left: 5px;
-  }
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
 }
 </style>
