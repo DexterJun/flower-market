@@ -73,7 +73,7 @@ const hymnList = ref<HymnItem[]>([]);
 
 // 获取图片URL
 const getImageUrl = (item: HymnItem): string => {
-  return `/src/views/hymn/image/${item.index}.${item.filename}.${item.type}`;
+  return `/image/hymn/${item.index}.${item.filename}.${item.type}`;
 };
 
 // 获取完整的数据
