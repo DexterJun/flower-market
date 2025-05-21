@@ -52,6 +52,7 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 import type { Ref } from 'vue';
 import MasonryWall from '../../components/masonry-wall.vue';
+import hymnJson from './catalog.json';
 
 interface HymnItem {
   id: string;
@@ -78,9 +79,7 @@ const getImageUrl = (item: HymnItem): string => {
 // 获取完整的数据
 const loadHymnList = async () => {
   try {
-    const response = await fetch('/src/views/hymn/catalog.json');
-    const data = await response.json();
-    hymnList.value = data;
+    hymnList.value = hymnJson;
   } catch (error) {
     console.error('Error loading hymn data:', error);
   }
