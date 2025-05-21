@@ -38,8 +38,8 @@
 
   <!-- 图片预览组件 -->
   <Teleport to="body">
-    <div v-if="previewVisible" class="image-preview" @click="closePreview">
-      <div class="preview-content">
+    <div v-if="previewVisible" class="image-preview" :class="{ visible: previewVisible }" @click="closePreview">
+      <div class="preview-content" :class="{ visible: previewVisible }">
         <img :src="currentPreviewImage" :alt="currentPreviewItem?.filename" @click.stop />
         <div class="preview-title">{{ currentPreviewItem?.filename }}</div>
         <button class="close-button" @click="closePreview">×</button>
@@ -58,6 +58,7 @@ interface HymnItem {
   filename: string;
   index: number;
   type: string;
+  image: string;
 }
 
 // 搜索相关
@@ -67,21 +68,23 @@ const clearSearch = () => {
 };
 
 // 导入数据
-const hymnList: Ref<HymnItem[]> = ref([
-  {
-    "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-    "filename": "我们成为一家人",
-    "index": 1,
-    "type": "jpg"
-  },
-  {
-    "id": "550e8400-e29b-41d4-a716-446655440001",
-    "filename": "这条路上我们一起走",
-    "index": 2,
-    "type": "jpg"
-  },
-  // ... 其他数据将从 catalog.json 中导入
-]);
+const hymnList = ref<HymnItem[]>([]);
+
+// 获取图片URL
+const getImageUrl = (item: HymnItem): string => {
+  return `/src/views/hymn/image/${item.index}.${item.filename}.${item.type}`;
+};
+
+// 获取完整的数据
+const loadHymnList = async () => {
+  try {
+    const response = await fetch('/src/views/hymn/catalog.json');
+    const data = await response.json();
+    hymnList.value = data;
+  } catch (error) {
+    console.error('Error loading hymn data:', error);
+  }
+};
 
 // 过滤后的列表
 const filteredHymnList = computed(() => {
@@ -120,11 +123,6 @@ const columnWidth = computed(() => {
   return Math.floor((availableWidth - (columns - 1) * 20) / columns); // 20是列间距
 });
 
-// 获取图片URL
-const getImageUrl = (item: HymnItem): string => {
-  return `/src/views/hymn/image/${item.index}.${item.filename}.${item.type}`;
-};
-
 // 监听窗口大小变化
 const handleResize = () => {
   windowWidth.value = window.innerWidth;
@@ -155,17 +153,6 @@ const handleKeyDown = (e: KeyboardEvent) => {
   }
 };
 
-// 获取完整的数据
-const fetchHymnData = async () => {
-  try {
-    const response = await fetch('/src/views/hymn/catalog.json');
-    const data = await response.json();
-    hymnList.value = data;
-  } catch (error) {
-    console.error('Error loading hymn data:', error);
-  }
-};
-
 // 抽屉状态
 const showDrawer = ref(false);
 
@@ -183,7 +170,7 @@ const scrollToItem = (item: HymnItem) => {
 onMounted(() => {
   window.addEventListener('resize', handleResize);
   window.addEventListener('keydown', handleKeyDown);
-  fetchHymnData();
+  loadHymnList();
 });
 
 onUnmounted(() => {
@@ -350,12 +337,14 @@ onUnmounted(() => {
   align-items: center;
   z-index: 1000;
   opacity: 0;
-  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: opacity;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, visibility;
 }
 
 .image-preview.visible {
   opacity: 1;
+  visibility: visible;
 }
 
 .preview-content {
@@ -363,12 +352,14 @@ onUnmounted(() => {
   max-width: 90vw;
   max-height: 90vh;
   transform: scale(0.95);
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  will-change: transform;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform, opacity;
 }
 
-.image-preview.visible .preview-content {
+.preview-content.visible {
   transform: scale(1);
+  opacity: 1;
 }
 
 .preview-content img {
@@ -387,6 +378,8 @@ onUnmounted(() => {
   text-align: center;
   color: #fff;
   padding: 10px;
+  font-size: 16px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .close-button {
@@ -396,8 +389,16 @@ onUnmounted(() => {
   color: #fff;
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 32px;
   cursor: pointer;
+  padding: 8px;
+  transition: var(--transition-fast);
+  opacity: 0.8;
+}
+
+.close-button:hover {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 /* 移动端适配 */
@@ -428,6 +429,20 @@ onUnmounted(() => {
     font-size: 16px;
     -webkit-appearance: none;
     appearance: none;
+  }
+
+  .preview-content {
+    max-width: 95vw;
+  }
+
+  .close-button {
+    top: -50px;
+    right: 0;
+  }
+
+  .preview-title {
+    bottom: -50px;
+    font-size: 14px;
   }
 }
 
