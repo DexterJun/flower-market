@@ -93,50 +93,76 @@ app.get('/api/images/search', async (req, res) => {
     const { query } = req.query;
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 20;
-    const marker = req.query.marker;
 
-    // 从 OSS 获取文件列表
-    const result = await ossClient.list({
-      'max-keys': pageSize,
-      marker: marker,
-      prefix: query // 使用前缀搜索提高效率
-    });
-
-    if (!result.objects) {
-      return res.json({
-        images: [],
-        pagination: {
-          current: page,
-          pageSize,
-          total: 0,
-          hasMore: false,
-          nextMarker: null
-        }
-      });
+    if (!query) {
+      return res.status(400).json({ error: '搜索关键词不能为空' });
     }
 
-    const filteredImages = result.objects
-      .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file.name))
-      .filter(file => file.name.toLowerCase().includes(query.toLowerCase()))
-      .map(file => ({
-        id: file.name.split('.')[0],
-        filename: file.name,
-        url: `https://${process.env.OSS_BUCKET}.${process.env.OSS_REGION}.aliyuncs.com/${file.name}`,
-        lastModified: file.lastModified,
-        size: file.size
-      }));
+    // 获取所有文件进行模糊搜索
+    let allObjects = [];
+    let marker = null;
+    let hasMore = true;
+    let batchCount = 0;
+    const maxBatches = 10; // 限制最大批次，避免超时
+
+    // 分批获取文件，同时进行搜索以提高效率
+    const searchQuery = query.toLowerCase();
+    let matchedImages = [];
+
+    while (hasMore && batchCount < maxBatches) {
+      const result = await ossClient.list({
+        'max-keys': 1000,
+        marker: marker,
+        prefix: '', // 不使用前缀限制，获取所有文件
+        delimiter: '/'
+      });
+
+      if (result.objects) {
+        // 立即过滤当前批次的文件
+        const batchMatches = result.objects
+          .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file.name))
+          .filter(file => file.name.toLowerCase().includes(searchQuery))
+          .map(file => ({
+            id: file.name.split('.')[0],
+            filename: file.name,
+            url: `https://${process.env.OSS_BUCKET}.${process.env.OSS_REGION}.aliyuncs.com/${file.name}`,
+            lastModified: file.lastModified,
+            size: file.size
+          }));
+
+        matchedImages = matchedImages.concat(batchMatches);
+      }
+
+      hasMore = result.isTruncated;
+      marker = result.nextMarker;
+      batchCount++;
+
+      // 如果已经找到足够多的结果，可以提前结束
+      if (matchedImages.length >= pageSize * page) {
+        break;
+      }
+    }
+
+    // 排序搜索结果
+    matchedImages.sort((a, b) => a.filename.toLowerCase().localeCompare(b.filename.toLowerCase()));
+
+    // 实现分页
+    const total = matchedImages.length;
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const paginatedImages = matchedImages.slice(startIndex, endIndex);
 
     // 构建分页信息
     const pagination = {
       current: page,
       pageSize,
-      total: result.isTruncated ? -1 : (page - 1) * pageSize + filteredImages.length,
-      hasMore: result.isTruncated,
-      nextMarker: result.nextMarker || null
+      total: hasMore ? -1 : total, // 如果还有更多数据未检索，total设为-1表示未知
+      hasMore: endIndex < total || hasMore,
+      nextMarker: null
     };
 
     res.json({
-      images: filteredImages,
+      images: paginatedImages,
       pagination
     });
   } catch (error) {
