@@ -108,6 +108,7 @@ app.get('/api/images/search', async (req, res) => {
     // 分批获取文件，同时进行搜索以提高效率
     const searchQuery = query.toLowerCase();
     let matchedImages = [];
+    let totalFilesChecked = 0;
 
     while (hasMore && batchCount < maxBatches) {
       const result = await ossClient.list({
@@ -118,10 +119,20 @@ app.get('/api/images/search', async (req, res) => {
       });
 
       if (result.objects) {
+        totalFilesChecked += result.objects.length;
+
         // 立即过滤当前批次的文件
-        const batchMatches = result.objects
-          .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file.name))
-          .filter(file => file.name.toLowerCase().includes(searchQuery))
+        const imageFiles = result.objects.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file.name));
+        console.log(`其中图片文件: ${imageFiles.length} 个`);
+
+        const batchMatches = imageFiles
+          .filter(file => {
+            const matches = file.name.toLowerCase().includes(searchQuery);
+            if (matches) {
+              console.log(`匹配到文件: ${file.name}`);
+            }
+            return matches;
+          })
           .map(file => ({
             id: file.name.split('.')[0],
             filename: file.name,
@@ -160,6 +171,12 @@ app.get('/api/images/search', async (req, res) => {
       hasMore: endIndex < total || hasMore,
       nextMarker: null
     };
+
+    console.log('返回结果:', {
+      totalMatches: total,
+      currentPageResults: paginatedImages.length,
+      pagination
+    });
 
     res.json({
       images: paginatedImages,

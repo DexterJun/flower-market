@@ -38,12 +38,24 @@ export const imageApi = {
         params.append('marker', marker);
       }
 
-      const response = await fetch(`${API_BASE_URL}/search?${params}`);
-      if (!response.ok) throw new Error('Failed to search images');
-      return await response.json();
+      // 根据环境使用不同的搜索路径
+      const searchPath = process.env.NODE_ENV === 'production' ? '/search' : '/images/search';
+      const fullUrl = `${API_BASE_URL}${searchPath}?${params}`;
+
+      const response = await fetch(fullUrl);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('搜索请求失败:', errorText);
+        throw new Error(`Failed to search images: ${response.status} ${errorText}`);
+      }
+
+      const result = await response.json();
+
+      return result;
     } catch (error) {
       console.error('Error searching images:', error);
       throw error;
     }
   }
-}; 
+};
