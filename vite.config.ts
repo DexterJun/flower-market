@@ -22,7 +22,7 @@ export default defineConfig({
   },
   server: {
     host: "0.0.0.0", // 监听所有可用的 IP 地址
-    port: 3000, // 指定端口号
+    port: 8083, // 指定端口号
     strictPort: true, // 如果端口被占用，则会报错
   },
   build: {

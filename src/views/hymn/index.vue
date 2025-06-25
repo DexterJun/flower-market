@@ -14,11 +14,36 @@
       <masonry-wall :items="filteredHymnList" :column-width="columnWidth" :gap="10" :rtl="false">
         <template #default="{ item }">
           <div class="image-card">
-            <img :src="getImageUrl(item)" :alt="item.filename" @load="onImageLoad" @click="openPreview(item)" />
+            <img :src="item.url" :alt="item.filename" @load="onImageLoad" @click="openPreview(item)" />
             <div class="image-title">{{ item.filename }}</div>
           </div>
         </template>
       </masonry-wall>
+
+      <!-- 加载状态 -->
+      <div v-if="loading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">加载中...</div>
+      </div>
+
+      <!-- 加载更多状态 -->
+      <div v-if="loadingMore" class="loading-more">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">加载更多...</div>
+      </div>
+
+      <!-- 错误状态 -->
+      <div v-if="error" class="error-container">
+        <div class="error-text">{{ error }}</div>
+        <button class="retry-button" @click="loadHymnList(true)">重试</button>
+      </div>
+
+      <!-- 没有更多数据提示 -->
+      <div
+        v-if="!loading && !loadingMore && hymnList.length > 0 && !(isSearching ? searchPagination.hasMore : pagination.hasMore)"
+        class="no-more-data">
+        没有更多数据了
+      </div>
     </div>
 
     <!-- 侧边抽屉 -->
@@ -30,7 +55,7 @@
       </div>
       <div class="drawer-content">
         <div v-for="item in sortedHymnList" :key="item.id" class="drawer-item" @click="scrollToItem(item)">
-          {{ item.index }}. {{ item.filename }}
+          {{ item.id }}. {{ item.filename }}
         </div>
       </div>
     </div>
@@ -49,56 +74,176 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue';
-import type { Ref } from 'vue';
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
 import MasonryWall from '../../components/masonry-wall.vue';
-import hymnJson from './catalog.json';
+// @ts-ignore
+import { imageApi } from '../../api/images';
 
 interface HymnItem {
   id: string;
   filename: string;
-  index: number;
-  type: string;
-  image: string;
+  url: string;
+  lastModified: string;
+  size: number;
+}
+
+interface PaginationInfo {
+  current: number;
+  pageSize: number;
+  total: number;
+  hasMore: boolean;
+  nextMarker: string | null;
 }
 
 // 搜索相关
 const searchQuery = ref('');
+const searchTimeout = ref<number | null>(null);
+
 const clearSearch = () => {
   searchQuery.value = '';
+  handleSearch();
 };
 
-// 导入数据
+// 处理搜索
+const handleSearch = () => {
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value);
+  }
+
+  searchTimeout.value = setTimeout(async () => {
+    if (searchQuery.value.trim()) {
+      await searchHymnList(searchQuery.value, true);
+    } else {
+      isSearching.value = false;
+      await loadHymnList(true);
+    }
+  }, 300);
+};
+
+// 监听搜索输入
+watch(searchQuery, handleSearch);
+
+// 数据状态
 const hymnList = ref<HymnItem[]>([]);
+const loading = ref(false);
+const loadingMore = ref(false);
+const error = ref<string | null>(null);
 
-// 获取图片URL
-const getImageUrl = (item: HymnItem): string => {
-  return `/image/hymn/${item.index}.${item.filename}.${item.type}`;
-};
+// 分页状态
+const pagination = ref({
+  current: 1,
+  pageSize: 20,
+  total: 0,
+  hasMore: true,
+  nextMarker: null
+});
 
-// 获取完整的数据
-const loadHymnList = async () => {
+// 搜索状态
+const isSearching = ref(false);
+const searchPagination = ref({
+  current: 1,
+  pageSize: 20,
+  total: 0,
+  hasMore: true,
+  nextMarker: null
+});
+
+// 获取图片列表
+const loadHymnList = async (reset = false) => {
   try {
-    hymnList.value = hymnJson;
-  } catch (error) {
-    console.error('Error loading hymn data:', error);
+    if (reset) {
+      loading.value = true;
+      hymnList.value = [];
+      pagination.value.current = 1;
+      pagination.value.nextMarker = null;
+    } else {
+      loadingMore.value = true;
+    }
+
+    error.value = null;
+
+    const data = await imageApi.getAllImages(
+      pagination.value.current,
+      pagination.value.pageSize,
+      pagination.value.nextMarker
+    );
+
+    if (reset) {
+      hymnList.value = data.images;
+    } else {
+      hymnList.value.push(...data.images);
+    }
+
+    pagination.value = {
+      ...data.pagination,
+      current: data.pagination.current + 1
+    };
+
+  } catch (err) {
+    error.value = '加载图片失败，请稍后重试';
+    console.error('Error loading hymn data:', err);
+  } finally {
+    loading.value = false;
+    loadingMore.value = false;
   }
 };
 
-// 过滤后的列表
+// 搜索图片
+const searchHymnList = async (query: string, reset = false) => {
+  if (!query.trim()) {
+    isSearching.value = false;
+    await loadHymnList(true);
+    return;
+  }
+
+  try {
+    if (reset) {
+      isSearching.value = true;
+      hymnList.value = [];
+      searchPagination.value.current = 1;
+      searchPagination.value.nextMarker = null;
+    } else {
+      loadingMore.value = true;
+    }
+
+    error.value = null;
+
+    const data = await imageApi.searchImages(
+      query,
+      searchPagination.value.current,
+      searchPagination.value.pageSize,
+      searchPagination.value.nextMarker
+    );
+
+    if (reset) {
+      hymnList.value = data.images;
+    } else {
+      hymnList.value.push(...data.images);
+    }
+
+    searchPagination.value = {
+      ...data.pagination,
+      current: data.pagination.current + 1
+    };
+
+  } catch (err) {
+    error.value = '搜索图片失败，请稍后重试';
+    console.error('Error searching hymns:', err);
+  } finally {
+    loadingMore.value = false;
+  }
+};
+
+// 过滤后的列表 - 现在直接使用hymnList，因为搜索已经在API层面处理
 const filteredHymnList = computed(() => {
-  if (!searchQuery.value) return hymnList.value;
-  const query = searchQuery.value.toLowerCase();
-  return hymnList.value.filter(item =>
-    item.filename.toLowerCase().includes(query)
-  );
+  return hymnList.value;
 });
 
 const windowWidth = ref(window.innerWidth);
 const previewVisible = ref(false);
 const currentPreviewItem = ref<HymnItem | null>(null);
 const currentPreviewImage = computed(() =>
-  currentPreviewItem.value ? getImageUrl(currentPreviewItem.value) : ''
+  currentPreviewItem.value ? currentPreviewItem.value.url : ''
 );
 
 // 计算列宽
@@ -155,9 +300,13 @@ const handleKeyDown = (e: KeyboardEvent) => {
 // 抽屉状态
 const showDrawer = ref(false);
 
-// 排序后的列表
+// 排序后的列表 - 用于抽屉显示
 const sortedHymnList = computed(() => {
-  return [...hymnList.value].sort((a, b) => a.index - b.index);
+  return [...hymnList.value].sort((a, b) => {
+    const indexA = parseInt(a.id) || 0;
+    const indexB = parseInt(b.id) || 0;
+    return indexA - indexB;
+  });
 });
 
 // 滚动到指定项
@@ -166,15 +315,47 @@ const scrollToItem = (item: HymnItem) => {
   searchQuery.value = item.filename;
 };
 
+// 无限滚动逻辑
+const handleScroll = () => {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const windowHeight = window.innerHeight;
+  const documentHeight = document.documentElement.scrollHeight;
+
+  // 当滚动到距离底部100px时触发加载
+  if (scrollTop + windowHeight >= documentHeight - 100) {
+    loadMoreData();
+  }
+};
+
+// 加载更多数据
+const loadMoreData = async () => {
+  if (loadingMore.value) return;
+
+  const currentPagination = isSearching.value ? searchPagination.value : pagination.value;
+
+  if (!currentPagination.hasMore) return;
+
+  if (isSearching.value && searchQuery.value.trim()) {
+    await searchHymnList(searchQuery.value, false);
+  } else {
+    await loadHymnList(false);
+  }
+};
+
 onMounted(() => {
   window.addEventListener('resize', handleResize);
   window.addEventListener('keydown', handleKeyDown);
-  loadHymnList();
+  window.addEventListener('scroll', handleScroll);
+  loadHymnList(true);
 });
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
   window.removeEventListener('keydown', handleKeyDown);
+  window.removeEventListener('scroll', handleScroll);
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value);
+  }
 });
 </script>
 
@@ -640,6 +821,90 @@ onUnmounted(() => {
 
   .drawer-open {
     transform: translateX(260px);
+  }
+}
+
+/* 加载状态样式 */
+.loading-container,
+.loading-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.loading-more {
+  padding: 20px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 12px;
+}
+
+.loading-text {
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 错误状态样式 */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.error-text {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.retry-button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: var(--transition-fast);
+}
+
+.retry-button:hover {
+  background: #357abd;
+  transform: translateY(-1px);
+}
+
+/* 没有更多数据提示 */
+.no-more-data {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+  font-size: 14px;
+  border-top: 1px solid #eef2f7;
+  margin-top: 20px;
+}
+
+/* 旋转动画 */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
   }
 }
 </style>
