@@ -8,7 +8,7 @@ const ossClient = new OSS({
   bucket: process.env.OSS_BUCKET,
 });
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // 设置CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -85,4 +85,4 @@ export default async function handler(req, res) {
     console.error('搜索图片失败:', error);
     res.status(500).json({ error: '搜索图片失败' });
   }
-} 
+}; 
