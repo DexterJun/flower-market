@@ -58,7 +58,7 @@ module.exports = async function handler(req, res) {
       .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file.name))
       .map(file => ({
         id: file.name.replace('hymn-image/', '').split('.')[0],
-        filename: file.name.replace('hymn-image/', ''),
+        filename: file.name.replace('hymn-image/', '').split('.')[1],
         url: `https://${process.env.OSS_BUCKET}.${process.env.OSS_REGION}.aliyuncs.com/${file.name}`,
         lastModified: file.lastModified,
         size: file.size

@@ -60,8 +60,8 @@ app.get('/api/images', async (req, res) => {
     const images = result.objects
       .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file.name))
       .map(file => ({
-        id: file.name.split('.')[0],
-        filename: file.name.split('.')[1] || file.name,
+        id: file.name.replace('hymn-image/', '').split('.')[0],
+        filename: file.name.replace('hymn-image/', '').split('.')[1],
         url: `https://${process.env.OSS_BUCKET}.${process.env.OSS_REGION}.aliyuncs.com/${file.name}`,
         lastModified: file.lastModified,
         size: file.size
@@ -135,8 +135,8 @@ app.get('/api/images/search', async (req, res) => {
             return matches;
           })
           .map(file => ({
-            id: file.name.split('.')[0],
-            filename: file.name.split('.')[1] || file.name,
+            id: file.name.replace('hymn-image/', '').split('.')[0],
+            filename: file.name.replace('hymn-image/', '').split('.')[1],
             url: `https://${process.env.OSS_BUCKET}.${process.env.OSS_REGION}.aliyuncs.com/${file.name}`,
             lastModified: file.lastModified,
             size: file.size
