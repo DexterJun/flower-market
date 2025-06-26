@@ -40,7 +40,7 @@ app.get('/api/images', async (req, res) => {
     const result = await ossClient.list({
       'max-keys': pageSize,
       marker: marker, // 如果提供了 marker，从该位置继续列举
-      prefix: '', // 可选：指定前缀进行过滤
+      prefix: 'hymn-image/', // 指定文件路径前缀
       delimiter: '/'
     });
 
@@ -61,7 +61,7 @@ app.get('/api/images', async (req, res) => {
       .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file.name))
       .map(file => ({
         id: file.name.split('.')[0],
-        filename: file.name,
+        filename: file.name.split('.')[1] || file.name,
         url: `https://${process.env.OSS_BUCKET}.${process.env.OSS_REGION}.aliyuncs.com/${file.name}`,
         lastModified: file.lastModified,
         size: file.size
@@ -114,7 +114,7 @@ app.get('/api/images/search', async (req, res) => {
       const result = await ossClient.list({
         'max-keys': 1000,
         marker: marker,
-        prefix: '', // 不使用前缀限制，获取所有文件
+        prefix: 'hymn-image/', // 指定文件路径前缀
         delimiter: '/'
       });
 
@@ -127,15 +127,16 @@ app.get('/api/images/search', async (req, res) => {
 
         const batchMatches = imageFiles
           .filter(file => {
-            const matches = file.name.toLowerCase().includes(searchQuery);
+            const fileName = file.name;
+            const matches = fileName.toLowerCase().includes(searchQuery);
             if (matches) {
-              console.log(`匹配到文件: ${file.name}`);
+              console.log(`匹配到文件: ${fileName}`);
             }
             return matches;
           })
           .map(file => ({
             id: file.name.split('.')[0],
-            filename: file.name,
+            filename: file.name.split('.')[1] || file.name,
             url: `https://${process.env.OSS_BUCKET}.${process.env.OSS_REGION}.aliyuncs.com/${file.name}`,
             lastModified: file.lastModified,
             size: file.size
@@ -150,6 +151,7 @@ app.get('/api/images/search', async (req, res) => {
 
       // 如果已经找到足够多的结果，可以提前结束
       if (matchedImages.length >= pageSize * page) {
+        console.log('找到足够结果，提前结束搜索');
         break;
       }
     }

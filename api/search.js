@@ -51,7 +51,7 @@ module.exports = async function handler(req, res) {
       const result = await ossClient.list({
         'max-keys': 1000,
         marker: marker,
-        prefix: '',
+        prefix: 'hymn-image/',
         delimiter: '/'
       });
 
@@ -59,10 +59,13 @@ module.exports = async function handler(req, res) {
         // 立即过滤当前批次的文件
         const batchMatches = result.objects
           .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file.name))
-          .filter(file => file.name.toLowerCase().includes(searchQuery))
+          .filter(file => {
+            const fileName = file.name.replace('hymn-image/', '');
+            return fileName.toLowerCase().includes(searchQuery);
+          })
           .map(file => ({
-            id: file.name.split('.')[0],
-            filename: file.name,
+            id: file.name.replace('hymn-image/', '').split('.')[0],
+            filename: file.name.replace('hymn-image/', ''),
             url: `https://${process.env.OSS_BUCKET}.${process.env.OSS_REGION}.aliyuncs.com/${file.name}`,
             lastModified: file.lastModified,
             size: file.size

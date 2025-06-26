@@ -54,8 +54,8 @@
         <button class="drawer-close" @click="showDrawer = false">×</button>
       </div>
       <div class="drawer-content">
-        <div v-for="item in sortedHymnList" :key="item.id" class="drawer-item" @click="scrollToItem(item)">
-          {{ item.id }}. {{ item.filename }}
+        <div v-for="item in catalog" :key="item.id" class="drawer-item" @click="scrollToItem(item)">
+          {{ item.index }}. {{ item.filename }}
         </div>
       </div>
     </div>
@@ -78,6 +78,7 @@ import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
 import MasonryWall from '../../components/masonry-wall.vue';
 // @ts-ignore
 import { imageApi } from '../../api/images';
+import catalog from './catalog.json'
 
 interface HymnItem {
   id: string;

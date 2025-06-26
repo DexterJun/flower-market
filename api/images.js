@@ -37,7 +37,7 @@ module.exports = async function handler(req, res) {
     const result = await ossClient.list({
       'max-keys': pageSize,
       marker: marker,
-      prefix: '',
+      prefix: 'hymn-image/',
       delimiter: '/'
     });
 
@@ -57,8 +57,8 @@ module.exports = async function handler(req, res) {
     const images = result.objects
       .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file.name))
       .map(file => ({
-        id: file.name.split('.')[0],
-        filename: file.name,
+        id: file.name.replace('hymn-image/', '').split('.')[0],
+        filename: file.name.replace('hymn-image/', ''),
         url: `https://${process.env.OSS_BUCKET}.${process.env.OSS_REGION}.aliyuncs.com/${file.name}`,
         lastModified: file.lastModified,
         size: file.size
