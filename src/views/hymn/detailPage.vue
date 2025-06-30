@@ -94,6 +94,11 @@ const loadHymnDetail = async () => {
     const data = await imageApi.getHymnDetail(id);
     hymnData.value = data;
 
+    // 设置网页标题为文件名
+    if (data.filename) {
+      document.title = data.filename;
+    }
+
   } catch (err) {
     error.value = '加载详情失败，请稍后重试';
     console.error('Error loading hymn detail:', err);
