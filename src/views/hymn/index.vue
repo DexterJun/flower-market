@@ -14,7 +14,7 @@
       <masonry-wall :items="filteredHymnList" :column-width="columnWidth" :gap="10" :rtl="false">
         <template #default="{ item }">
           <div class="image-card">
-            <img :src="item.url" :alt="item.filename" @load="onImageLoad" @click="openPreview(item)" />
+            <img :src="item.url" :alt="item.filename" @load="onImageLoad" @click="handleItemClick(item)" />
             <div class="image-title">{{ item.filename }}</div>
             <div v-if="item.tag && item.tag.trim()" class="image-ribbon">
               <span class="ribbon-text">{{ item.tag }}</span>
@@ -78,6 +78,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
+import { useRouter } from 'vue-router';
 // @ts-ignore
 import MasonryWall from '@/components/masonry-wall.vue';
 // @ts-ignore
@@ -89,7 +90,7 @@ interface HymnItem {
   url: string;
   lastModified: string;
   size: number;
-  tag?: string[];
+  tag?: string;
 }
 
 interface PaginationInfo {
@@ -99,6 +100,9 @@ interface PaginationInfo {
   hasMore: boolean;
   nextMarker: string | null;
 }
+
+// 路由
+const router = useRouter();
 
 // 搜索相关
 const searchQuery = ref('');
@@ -295,6 +299,22 @@ const handleResize = () => {
 // 图片加载完成后触发重排
 const onImageLoad = () => {
   // 瀑布流会自动处理重排
+};
+
+// 处理图片点击
+const handleItemClick = (item: HymnItem) => {
+  // 如果有tag，跳转到详情页面
+  if (item.tag && item.tag.trim()) {
+    router.push({
+      name: 'HymnDetail',
+      query: {
+        id: item.id
+      }
+    });
+  } else {
+    // 如果没有tag，保持原有的预览逻辑
+    openPreview(item);
+  }
 };
 
 // 打开预览
@@ -982,8 +1002,8 @@ onUnmounted(() => {
 }
 
 .image-card:hover .image-ribbon {
-  transform: rotate(-45deg) scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transform: rotate(45deg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* 移动端丝带适配 */

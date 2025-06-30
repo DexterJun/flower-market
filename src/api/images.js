@@ -70,5 +70,21 @@ export const imageApi = {
       console.error('Error fetching content:', error);
       throw error;
     }
+  },
+
+  // 获取诗歌详情
+  getHymnDetail: async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/hymn/detail/${id}`);
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to fetch hymn detail: ${response.status} ${errorText}`);
+      }
+      const result = await response.json();
+      return result.data;
+    } catch (error) {
+      console.error('Error fetching hymn detail:', error);
+      throw error;
+    }
   }
 };

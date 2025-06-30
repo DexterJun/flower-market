@@ -137,4 +137,108 @@ npm start
 
 ---
 
-推荐使用**方案一（Vercel Functions）**，因为配置最简单，成本最低！ 
+推荐使用**方案一（Vercel Functions）**，因为配置最简单，成本最低！
+
+## Vercel 部署 API 接口完整性检查
+
+### ✅ 已配置的 API 端点
+
+| 端点 | 文件位置 | 功能描述 | 使用页面 |
+|------|----------|----------|----------|
+| `/api/images` | `api/images.js` | 获取图片列表（支持分页） | hymn/index.vue |
+| `/api/search` | `api/search.js` | 搜索图片 | hymn/index.vue |
+| `/api/getContent` | `api/getContent.js` | 获取目录内容 | hymn/index.vue |
+| `/api/hymn/detail/:id` | `api/hymn/detail/[id].js` | 获取诗歌详情 | hymn/detailPage.vue |
+| `/api/health` | `api/health.js` | API健康检查 | 监控使用 |
+
+### 📁 API 文件结构
+```
+api/
+├── getContent.js          # 获取目录内容
+├── health.js             # 健康检查
+├── hymn/
+│   └── detail/
+│       └── [id].js       # 动态路由：获取诗歌详情
+├── images.js             # 获取图片列表
+└── search.js             # 搜索图片
+```
+
+### 🔧 配置文件
+
+#### vercel.json
+```json
+{
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/hymn/detail/(.*)",
+      "destination": "/api/hymn/detail/[id]?id=$1"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    }
+  ]
+}
+```
+
+### 🔑 环境变量配置
+
+确保在 Vercel 项目设置中配置以下环境变量：
+
+```
+OSS_REGION=your-oss-region
+OSS_BUCKET=your-bucket-name  
+ALIBABA_CLOUD_ACCESS_KEY_ID=your-access-key-id
+ALIBABA_CLOUD_ACCESS_KEY_SECRET=your-access-key-secret
+```
+
+### 🧪 API 测试
+
+部署后可以通过以下URL测试API是否正常工作：
+
+1. **健康检查**: `https://your-domain.vercel.app/api/health`
+2. **获取目录**: `https://your-domain.vercel.app/api/getContent`
+3. **获取图片**: `https://your-domain.vercel.app/api/images?page=1&pageSize=5`
+4. **搜索功能**: `https://your-domain.vercel.app/api/search?query=test`
+5. **诗歌详情**: `https://your-domain.vercel.app/api/hymn/detail/[some-id]`
+
+### 📋 部署前检查清单
+
+- [x] 所有API文件已创建
+- [x] vercel.json 配置正确
+- [x] 动态路由配置正确
+- [x] 前端API调用路径匹配
+- [x] 依赖项包含ali-oss
+- [x] CORS配置已添加
+- [x] 错误处理已实现
+
+### 🚀 部署流程
+
+1. 确认所有文件已提交到git
+2. 推送到GitHub/GitLab
+3. 在Vercel中连接仓库
+4. 配置环境变量
+5. 部署完成后访问 `/api/health` 检查API状态
+
+### 📝 注意事项
+
+1. **catalog.json路径**: API从`server/src/catalog.json`读取数据
+2. **OSS配置**: 确保阿里云OSS权限配置正确
+3. **动态路由**: `/api/hymn/detail/:id`通过`[id].js`文件处理
+4. **生产环境路径**: 前端使用相对路径`/api`调用接口
+
+### 🔍 故障排除
+
+如果API不工作，请检查：
+
+1. Vercel函数日志
+2. 环境变量是否正确设置
+3. catalog.json文件是否存在
+4. OSS访问权限是否正常
+
+部署完成后，所有API接口都应该能正常工作！ 

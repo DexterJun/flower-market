@@ -19,6 +19,14 @@ const router = createRouter({
         title: "青年团契诗歌集",
       },
     },
+    {
+      path: "/hymn/detail",
+      name: "HymnDetail",
+      component: () => import("@/views/hymn/detailPage.vue"),
+      meta: {
+        title: "青年团契诗歌集",
+      },
+    },
   ],
 });
 
