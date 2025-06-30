@@ -1,4 +1,6 @@
 const OSS = require('ali-oss');
+const fs = require('fs');
+const path = require('path');
 
 // 配置阿里云 OSS 客户端
 const ossClient = new OSS({
@@ -7,6 +9,29 @@ const ossClient = new OSS({
   accessKeySecret: process.env.ALIBABA_CLOUD_ACCESS_KEY_SECRET,
   bucket: process.env.OSS_BUCKET,
 });
+
+// 加载 catalog.json
+let catalogData = null;
+try {
+  const catalogPath = path.join(process.cwd(), 'server', 'src', 'catalog.json');
+  catalogData = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+} catch (error) {
+  console.error('加载 catalog.json 失败:', error);
+}
+
+// 根据文件名匹配 catalog 中的数据
+function enrichImageWithCatalogData(image) {
+  if (!catalogData) return image;
+  
+  const catalogItem = catalogData.find(item => item.filename === image.filename);
+  if (catalogItem && catalogItem.tags) {
+    return {
+      ...image,
+      tags: catalogItem.tags
+    };
+  }
+  return image;
+}
 
 module.exports = async function handler(req, res) {
   // 设置CORS
@@ -63,13 +88,18 @@ module.exports = async function handler(req, res) {
             const fileName = file.name.replace('hymn-image/', '');
             return fileName.toLowerCase().includes(searchQuery);
           })
-          .map(file => ({
-            id: file.name.replace('hymn-image/', '').split('.')[0],
-            filename: file.name.replace('hymn-image/', '').split('.')[1],
-            url: `https://${process.env.OSS_BUCKET}.${process.env.OSS_REGION}.aliyuncs.com/${file.name}`,
-            lastModified: file.lastModified,
-            size: file.size
-          }));
+          .map(file => {
+            const baseImage = {
+              id: file.name.replace('hymn-image/', '').split('.')[0],
+              filename: file.name.replace('hymn-image/', '').split('.')[1],
+              url: `https://${process.env.OSS_BUCKET}.${process.env.OSS_REGION}.aliyuncs.com/${file.name}`,
+              lastModified: file.lastModified,
+              size: file.size
+            };
+            
+            // 使用 catalog 数据丰富图片信息
+            return enrichImageWithCatalogData(baseImage);
+          });
 
         matchedImages = matchedImages.concat(batchMatches);
       }

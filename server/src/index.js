@@ -28,6 +28,26 @@ app.use(fileUpload({
   tempFileDir: '/tmp/'
 }));
 
+// 获取目录内容接口
+app.get('/api/getContent', async (req, res) => {
+  try {
+    const catalogPath = path.join(__dirname, 'catalog.json');
+    const catalogData = await fs.readFile(catalogPath, 'utf8');
+    const catalog = JSON.parse(catalogData);
+
+    res.json({
+      success: true,
+      data: catalog
+    });
+  } catch (error) {
+    console.error('获取目录内容失败:', error);
+    res.status(500).json({
+      success: false,
+      error: '获取目录内容失败'
+    });
+  }
+});
+
 // 获取图片列表（支持分页）
 app.get('/api/images', async (req, res) => {
   try {
@@ -57,15 +77,27 @@ app.get('/api/images', async (req, res) => {
       });
     }
 
+    const catalogPath = path.join(__dirname, 'catalog.json');
+    const catalogData = await fs.readFile(catalogPath, 'utf8');
+    const catalog = JSON.parse(catalogData);
+
     const images = result.objects
       .filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file.name))
-      .map(file => ({
-        id: file.name.replace('hymn-image/', '').split('.')[0],
-        filename: file.name.replace('hymn-image/', '').split('.')[1],
-        url: `https://${process.env.OSS_BUCKET}.${process.env.OSS_REGION}.aliyuncs.com/${file.name}`,
-        lastModified: file.lastModified,
-        size: file.size
-      }))
+      .map(file => {
+        const filename = file.name.replace('hymn-image/', '').split('.')[1];
+        const catalogItem = catalog.find(item => item.filename === filename);
+        const resObj = {
+          id: file.name.replace('hymn-image/', '').split('.')[0],
+          filename,
+          url: `https://${process.env.OSS_BUCKET}.${process.env.OSS_REGION}.aliyuncs.com/${file.name}`,
+          lastModified: file.lastModified,
+          size: file.size
+        }
+        if (catalogItem?.tag) {
+          resObj.tag = catalogItem.tag;
+        }
+        return resObj
+      })
       .sort((a, b) => a.filename.toLowerCase().localeCompare(b.filename.toLowerCase())); // 不区分大小写的字母排序
 
     // 构建分页信息
@@ -110,6 +142,10 @@ app.get('/api/images/search', async (req, res) => {
     let matchedImages = [];
     let totalFilesChecked = 0;
 
+    const catalogPath = path.join(__dirname, 'catalog.json');
+    const catalogData = await fs.readFile(catalogPath, 'utf8');
+    const catalog = JSON.parse(catalogData);
+
     while (hasMore && batchCount < maxBatches) {
       const result = await ossClient.list({
         'max-keys': 1000,
@@ -123,24 +159,28 @@ app.get('/api/images/search', async (req, res) => {
 
         // 立即过滤当前批次的文件
         const imageFiles = result.objects.filter(file => /\.(jpg|jpeg|png|gif)$/i.test(file.name));
-        console.log(`其中图片文件: ${imageFiles.length} 个`);
 
         const batchMatches = imageFiles
           .filter(file => {
             const fileName = file.name;
             const matches = fileName.toLowerCase().includes(searchQuery);
-            if (matches) {
-              console.log(`匹配到文件: ${fileName}`);
-            }
             return matches;
           })
-          .map(file => ({
-            id: file.name.replace('hymn-image/', '').split('.')[0],
-            filename: file.name.replace('hymn-image/', '').split('.')[1],
-            url: `https://${process.env.OSS_BUCKET}.${process.env.OSS_REGION}.aliyuncs.com/${file.name}`,
-            lastModified: file.lastModified,
-            size: file.size
-          }));
+          .map(file => {
+            const filename = file.name.replace('hymn-image/', '').split('.')[1];
+            const catalogItem = catalog.find(item => item.filename === filename);
+            const resObj = {
+              id: file.name.replace('hymn-image/', '').split('.')[0],
+              filename,
+              url: `https://${process.env.OSS_BUCKET}.${process.env.OSS_REGION}.aliyuncs.com/${file.name}`,
+              lastModified: file.lastModified,
+              size: file.size
+            }
+            if (catalogItem?.tag) {
+              resObj.tag = catalogItem.tag;
+            }
+            return resObj
+          });
 
         matchedImages = matchedImages.concat(batchMatches);
       }
@@ -173,12 +213,6 @@ app.get('/api/images/search', async (req, res) => {
       hasMore: endIndex < total || hasMore,
       nextMarker: null
     };
-
-    console.log('返回结果:', {
-      totalMatches: total,
-      currentPageResults: paginatedImages.length,
-      pagination
-    });
 
     res.json({
       images: paginatedImages,

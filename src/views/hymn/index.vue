@@ -16,6 +16,9 @@
           <div class="image-card">
             <img :src="item.url" :alt="item.filename" @load="onImageLoad" @click="openPreview(item)" />
             <div class="image-title">{{ item.filename }}</div>
+            <div v-if="item.tag && item.tag.trim()" class="image-ribbon">
+              <span class="ribbon-text">{{ item.tag }}</span>
+            </div>
           </div>
         </template>
       </masonry-wall>
@@ -75,10 +78,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
-import MasonryWall from '../../components/masonry-wall.vue';
+// @ts-ignore
+import MasonryWall from '@/components/masonry-wall.vue';
 // @ts-ignore
 import { imageApi } from '../../api/images';
-import catalog from './catalog.json'
 
 interface HymnItem {
   id: string;
@@ -86,6 +89,7 @@ interface HymnItem {
   url: string;
   lastModified: string;
   size: number;
+  tag?: string[];
 }
 
 interface PaginationInfo {
@@ -129,6 +133,8 @@ const hymnList = ref<HymnItem[]>([]);
 const loading = ref(false);
 const loadingMore = ref(false);
 const error = ref<string | null>(null);
+const catalog = ref<any[]>([]);
+const catalogLoading = ref(false);
 
 // 分页状态
 const pagination = ref({
@@ -232,6 +238,19 @@ const searchHymnList = async (query: string, reset = false) => {
     console.error('Error searching hymns:', err);
   } finally {
     loadingMore.value = false;
+  }
+};
+
+// 获取目录数据
+const loadCatalog = async () => {
+  try {
+    catalogLoading.value = true;
+    const catalogData = await imageApi.getContent();
+    catalog.value = catalogData;
+  } catch (err) {
+    console.error('Error loading catalog:', err);
+  } finally {
+    catalogLoading.value = false;
   }
 };
 
@@ -348,6 +367,7 @@ onMounted(() => {
   window.addEventListener('keydown', handleKeyDown);
   window.addEventListener('scroll', handleScroll);
   loadHymnList(true);
+  loadCatalog();
 });
 
 onUnmounted(() => {
@@ -457,6 +477,7 @@ onUnmounted(() => {
 }
 
 .image-card {
+  position: relative;
   background: #fff;
   border-radius: 16px;
   overflow: hidden;
@@ -906,6 +927,77 @@ onUnmounted(() => {
 
   100% {
     transform: rotate(360deg);
+  }
+}
+
+/* 丝带标签样式 */
+.image-ribbon {
+  position: absolute;
+  top: 10px;
+  right: -8px;
+  background: linear-gradient(45deg, var(--primary-color) 0%, #357abd 100%);
+  color: white;
+  padding: 6px 12px 6px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transform: rotate(45deg);
+  transform-origin: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  min-width: 60px;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.image-ribbon::before {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 4px solid #2c5aa0;
+  border-bottom: 4px solid transparent;
+}
+
+.image-ribbon::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-right: 4px solid #2c5aa0;
+  border-bottom: 4px solid transparent;
+}
+
+.ribbon-text {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80px;
+}
+
+.image-card:hover .image-ribbon {
+  transform: rotate(-45deg) scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* 移动端丝带适配 */
+@media screen and (max-width: 768px) {
+  .image-ribbon {
+    top: 8px;
+    left: -6px;
+    padding: 4px 12px 4px 8px;
+    font-size: 10px;
+    min-width: 50px;
+  }
+
+  .ribbon-text {
+    max-width: 60px;
   }
 }
 </style>

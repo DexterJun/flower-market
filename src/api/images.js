@@ -57,5 +57,18 @@ export const imageApi = {
       console.error('Error searching images:', error);
       throw error;
     }
+  },
+
+  // 获取目录内容
+  getContent: async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/getContent`);
+      if (!response.ok) throw new Error('Failed to fetch content');
+      const result = await response.json();
+      return result.data;
+    } catch (error) {
+      console.error('Error fetching content:', error);
+      throw error;
+    }
   }
 };
