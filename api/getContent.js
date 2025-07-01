@@ -1,46 +1,4 @@
-/*
- * @File name: 
- * @Author: 
- * @Version: 
- * @Date: 2025-07-01 09:49:09
- * @Description: 
- */
-const fs = require('fs');
-const path = require('path');
+const { getContentHandler } = require('../lib/handlers');
+const { createVercelHandler } = require('../lib/vercel-adapter');
 
-module.exports = async function handler(req, res) {
-  // 设置CORS
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
-
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: '方法不被允许' });
-  }
-
-  try {
-    const catalogPath = path.join(process.cwd(), 'api', 'catalog.json');
-    const catalogData = fs.readFileSync(catalogPath, 'utf8');
-    const catalog = JSON.parse(catalogData);
-
-    res.json({
-      success: true,
-      data: catalog
-    });
-  } catch (error) {
-    console.error('获取目录内容失败:', error);
-    res.status(500).json({
-      success: false,
-      error: '获取目录内容失败'
-    });
-  }
-}; 
+module.exports = createVercelHandler(getContentHandler);

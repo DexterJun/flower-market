@@ -10,7 +10,5 @@ declare module 'vue' {
     MasonryWall: typeof import('./src/components/masonry-wall.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    VanButton: typeof import('vant/es')['Button']
-    VanNavBar: typeof import('vant/es')['NavBar']
   }
 }

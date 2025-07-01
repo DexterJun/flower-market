@@ -1,3 +1,10 @@
+/*
+ * @File name: 
+ * @Author: 
+ * @Version: 
+ * @Date: 2025-07-01 10:23:57
+ * @Description: 
+ */
 // 根据环境自动切换API地址
 const API_BASE_URL = process.env.NODE_ENV === 'production'
   ? '/api'  // 生产环境使用相对路径
@@ -39,7 +46,7 @@ export const imageApi = {
       }
 
       // 根据环境使用不同的搜索路径
-      const searchPath = process.env.NODE_ENV === 'production' ? '/search' : '/images/search';
+      const searchPath = '/search';
       const fullUrl = `${API_BASE_URL}${searchPath}?${params}`;
 
       const response = await fetch(fullUrl);

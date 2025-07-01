@@ -1,10 +1,16 @@
 {
   "name": "flower-market",
   "private": true,
-  "version": "1.1.1",
+  "version": "0.0.1",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build"
+    "dev": "vercel dev",
+    "dev:frontend": "vite",
+    "dev:express": "cd server && npm start",
+    "build": "vite build",
+    "preview": "vite preview",
+    "sync-data": "node sync-data.js",
+    "test:api": "curl http://localhost:3000/api/health",
+    "docs": "echo '📖 查看文档: docs/unified-api.md'"
   },
   "dependencies": {
     "ali-oss": "^6.23.0",
