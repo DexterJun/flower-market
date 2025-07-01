@@ -37,7 +37,7 @@ module.exports = async function handler(req, res) {
     }
 
     // 从 catalog 中查找数据
-    const catalogPath = path.join(process.cwd(), 'server', 'src', 'catalog.json');
+    const catalogPath = path.join(process.cwd(), 'api', 'catalog.json');
     const catalogData = fs.readFileSync(catalogPath, 'utf8');
     const catalog = JSON.parse(catalogData);
 

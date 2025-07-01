@@ -1,3 +1,10 @@
+/*
+ * @File name: 
+ * @Author: 
+ * @Version: 
+ * @Date: 2025-07-01 09:49:09
+ * @Description: 
+ */
 const fs = require('fs');
 const path = require('path');
 
@@ -21,7 +28,7 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const catalogPath = path.join(process.cwd(), 'server', 'src', 'catalog.json');
+    const catalogPath = path.join(process.cwd(), 'api', 'catalog.json');
     const catalogData = fs.readFileSync(catalogPath, 'utf8');
     const catalog = JSON.parse(catalogData);
 
