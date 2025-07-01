@@ -17,6 +17,18 @@
         <div class="lyrics-content">{{ hymnData.detail.lyrics }}</div>
       </div>
 
+      <!-- 音频播放器 -->
+      <div v-if="hymnData.detail?.audio" class="audio-container">
+        <h3 class="section-title">音频播放</h3>
+        <div class="audio-player-wrapper">
+          <audio :src="hymnData.detail.audio" controls preload="metadata" class="detail-audio"
+            controlsList="nodownload nofullscreen noremoteplayback" @loadstart="onAudioLoadStart"
+            @canplay="onAudioCanPlay" @error="onAudioError">
+            您的浏览器不支持音频播放
+          </audio>
+        </div>
+      </div>
+
       <!-- 活动列表 -->
       <div v-if="hymnData.detail?.events && hymnData.detail.events.length > 0" class="events-container">
         <h3 class="section-title">相关活动</h3>
@@ -31,8 +43,8 @@
           <div v-if="event.videos && event.videos.length > 0" class="videos-container">
             <div v-for="(videoName, videoIndex) in event.videos" :key="videoIndex" class="video-item">
               <video :src="getVideoUrl(event, videoIndex)" controls preload="metadata" class="detail-video"
-                @loadstart="onVideoLoadStart(videoName)" @canplay="onVideoCanPlay(videoName)"
-                @error="onVideoError(videoName, $event)">
+                controlsList="nodownload noremoteplayback" @loadstart="onVideoLoadStart(videoName)"
+                @canplay="onVideoCanPlay(videoName)" @error="onVideoError(videoName, $event)">
                 您的浏览器不支持视频播放
               </video>
             </div>
@@ -77,6 +89,7 @@ interface HymnData {
   detail?: {
     title?: string;
     lyrics?: string;
+    audio?: string;
     events?: EventItem[];
   };
 }
@@ -161,6 +174,20 @@ const onVideoCanPlay = (videoName: string) => {
 
 const onVideoError = (videoName: string, event: Event) => {
   console.error(`视频 ${videoName} 加载失败:`, event);
+  // 可以在这里添加错误提示
+};
+
+// 音频事件处理
+const onAudioLoadStart = () => {
+  console.log('音频开始加载');
+};
+
+const onAudioCanPlay = () => {
+  console.log('音频可以播放');
+};
+
+const onAudioError = (event: Event) => {
+  console.error('音频加载失败:', event);
   // 可以在这里添加错误提示
 };
 
@@ -296,6 +323,114 @@ onMounted(() => {
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
 }
 
+/* 音频播放器样式 */
+.audio-container {
+  padding: 25px 30px;
+  background: linear-gradient(to right, #fefeff, #ffffff);
+}
+
+.audio-player-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 30px;
+  border-radius: 24px;
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.audio-player-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.1) 100%);
+  pointer-events: none;
+}
+
+.audio-player-wrapper:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+}
+
+.detail-audio {
+  width: 100%;
+  max-width: 700px;
+  height: 60px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  outline: none;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.detail-audio:focus {
+  box-shadow: 0 12px 24px rgba(255, 255, 255, 0.4);
+  transform: scale(1.02);
+}
+
+.detail-audio::-webkit-media-controls-panel {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 249, 255, 0.95));
+  border-radius: 14px;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.2);
+}
+
+.detail-audio::-webkit-media-controls-timeline {
+  background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+  border-radius: 8px;
+  margin-left: 10px;
+  height: 6px;
+  box-shadow: 0 2px 8px rgba(108, 92, 231, 0.4);
+}
+
+.detail-audio::-webkit-media-controls-current-time-display,
+.detail-audio::-webkit-media-controls-time-remaining-display {
+  color: #ffffff;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(69, 69, 69, 0.4);
+  background: rgba(108, 92, 231, 0.3);
+  border-radius: 8px;
+  padding: 3px 8px;
+  font-size: 12px;
+  border: 1px solid rgba(162, 155, 254, 0.4);
+  backdrop-filter: blur(5px);
+}
+
+/* 隐藏不需要的控件 */
+.detail-audio::-webkit-media-controls-download-button,
+.detail-audio::-webkit-media-controls-overflow-button,
+.detail-audio::-webkit-media-controls-overflow-menu-button,
+.detail-audio::-webkit-media-controls-toggle-closed-captions-button,
+.detail-audio::-webkit-media-controls-fullscreen-button,
+.detail-audio::-webkit-media-controls-picture-in-picture-button,
+.detail-audio::-webkit-media-controls-cast-button,
+.detail-audio::-webkit-media-controls-more-button {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* 通用隐藏所有可能的更多按钮 */
+.detail-audio audio::-webkit-media-controls button[aria-label*="更多"],
+.detail-audio audio::-webkit-media-controls button[aria-label*="More"],
+.detail-audio audio::-webkit-media-controls button[title*="更多"],
+.detail-audio audio::-webkit-media-controls button[title*="More"],
+.detail-audio audio::-webkit-media-controls [role="button"]:last-child {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
 /* 活动容器样式 */
 .events-container {
   padding: 25px 30px;
@@ -376,34 +511,75 @@ onMounted(() => {
 .videos-container {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 24px;
 }
 
 .video-item {
-  background: linear-gradient(135deg, #ffffff, #f8f9ff);
-  padding: 18px;
-  border-radius: 16px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(102, 126, 234, 0.1);
-  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.25);
+  transition: all 0.4s ease;
+  position: relative;
 }
 
 .video-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(102, 126, 234, 0.35);
 }
 
 .detail-video {
   width: 100%;
   height: auto;
   display: block;
-  border-radius: 12px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
   transition: all 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  background: transparent;
+}
+
+.detail-video::-webkit-media-controls {
+  background: transparent;
+}
+
+.detail-video::-webkit-media-controls-overlay-play-button {
+  display: none;
+}
+
+.detail-video::-webkit-media-controls-overlay-enclosure {
+  display: none;
+}
+
+.detail-video::-webkit-media-controls-start-playback-button {
+  display: none;
+}
+
+/* 优化视频控件显示 */
+.detail-video::-webkit-media-controls-enclosure {
+  background: transparent;
+}
+
+.detail-video::-webkit-media-controls-overlay {
+  display: none;
 }
 
 .detail-video:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
+}
+
+.detail-video:focus {
+  outline: 3px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 4px;
+}
+
+/* 视频播放器控件样式 */
+
+/* 隐藏视频不需要的控件 */
+.detail-video::-webkit-media-controls-download-button,
+.detail-video::-webkit-media-controls-overflow-button {
+  display: none;
 }
 
 /* 加载状态样式 */
@@ -492,11 +668,32 @@ onMounted(() => {
   }
 }
 
-/* 移动端适配 */
+/* 移动端通用优化 */
 @media screen and (max-width: 768px) {
+
+  /* 触摸优化 */
+  .retry-button {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+  }
+
+  .detail-video,
+  .detail-audio {
+    touch-action: manipulation;
+  }
+
+  /* 滚动优化 */
+  .lyrics-content {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 阻止缩放 */
   .detail-content {
+    touch-action: pan-y;
     margin: 10px;
     border-radius: 20px;
+    max-width: calc(100% - 20px);
   }
 
   .title-container {
@@ -505,6 +702,7 @@ onMounted(() => {
 
   .hymn-title {
     font-size: 26px;
+    line-height: 1.3;
   }
 
   .image-container {
@@ -516,8 +714,9 @@ onMounted(() => {
   }
 
   .lyrics-container,
+  .audio-container,
   .events-container {
-    padding: 20px;
+    padding: 20px 15px;
   }
 
   .lyrics-content {
@@ -540,8 +739,23 @@ onMounted(() => {
     margin-bottom: 15px;
   }
 
+  .audio-player-wrapper {
+    padding: 20px 15px;
+  }
+
+  .detail-audio {
+    height: 55px;
+    max-width: 100%;
+  }
+
   .video-item {
-    padding: 15px;
+    padding: 20px 15px;
+  }
+
+  .detail-video {
+    width: 100%;
+    height: auto;
+    min-height: 200px;
   }
 
   .loading-container,
@@ -549,11 +763,28 @@ onMounted(() => {
     margin: 10px;
     padding: 30px 20px;
   }
+
+  /* 优化音频播放器在移动端的显示 */
+  .detail-audio::-webkit-media-controls-current-time-display,
+  .detail-audio::-webkit-media-controls-time-remaining-display {
+    font-size: 11px;
+    padding: 2px 4px;
+  }
 }
 
 @media screen and (max-width: 480px) {
+  .detail-content {
+    margin: 5px;
+    border-radius: 16px;
+  }
+
+  .title-container {
+    padding: 18px 15px 14px 15px;
+  }
+
   .hymn-title {
-    font-size: 22px;
+    font-size: 20px;
+    line-height: 1.2;
   }
 
   .section-title {
@@ -564,11 +795,19 @@ onMounted(() => {
   .event-name {
     font-size: 16px;
     margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .lyrics-container,
+  .audio-container,
+  .events-container {
+    padding: 15px 12px;
   }
 
   .lyrics-content {
     font-size: 14px;
-    padding: 18px;
+    padding: 15px;
+    line-height: 1.7;
   }
 
   .event-item {
@@ -580,12 +819,205 @@ onMounted(() => {
     margin-bottom: 15px;
   }
 
+  .event-date {
+    font-size: 13px;
+    padding: 4px 8px;
+  }
+
+  .event-description {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .audio-player-wrapper {
+    padding: 18px 12px;
+  }
+
+  .detail-audio {
+    height: 48px;
+    max-width: 100%;
+  }
+
+  .video-item {
+    padding: 15px 10px;
+  }
+
+  .detail-video {
+    min-height: 180px;
+  }
+
   .image-container {
     padding: 10px;
   }
 
   .detail-image {
     max-width: calc(100% - 20px);
+  }
+
+  .loading-container,
+  .error-container {
+    margin: 5px;
+    padding: 25px 15px;
+  }
+
+  .loading-text,
+  .error-text {
+    font-size: 14px;
+  }
+
+  .retry-button {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+
+  /* 进一步优化音频播放器 */
+  .detail-audio::-webkit-media-controls-timeline {
+    height: 5px;
+    margin-left: 8px;
+  }
+
+  .detail-audio::-webkit-media-controls-current-time-display,
+  .detail-audio::-webkit-media-controls-time-remaining-display {
+    font-size: 10px;
+    padding: 1px 3px;
+  }
+}
+
+/* 超小屏幕适配 */
+@media screen and (max-width: 360px) {
+  .detail-content {
+    margin: 2px;
+    border-radius: 14px;
+  }
+
+  .title-container {
+    padding: 15px 12px;
+  }
+
+  .hymn-title {
+    font-size: 18px;
+  }
+
+  .section-title {
+    font-size: 16px;
+  }
+
+  .lyrics-container,
+  .audio-container,
+  .events-container {
+    padding: 12px 10px;
+  }
+
+  .lyrics-content {
+    font-size: 13px;
+    padding: 12px;
+  }
+
+  .audio-player-wrapper {
+    padding: 15px 10px;
+  }
+
+  .detail-audio {
+    height: 44px;
+  }
+
+  .video-item {
+    padding: 12px 8px;
+  }
+
+  .detail-video {
+    min-height: 160px;
+  }
+
+  .event-item {
+    padding: 12px 10px;
+  }
+
+  .event-name {
+    font-size: 15px;
+  }
+
+  .event-date {
+    font-size: 12px;
+  }
+
+  .event-description {
+    font-size: 13px;
+  }
+}
+
+/* 横屏模式适配 */
+@media screen and (max-height: 600px) and (orientation: landscape) {
+  .detail-content {
+    margin: 5px auto;
+    max-height: 95vh;
+    overflow-y: auto;
+  }
+
+  .title-container {
+    padding: 15px 20px 12px 20px;
+  }
+
+  .hymn-title {
+    font-size: 24px;
+  }
+
+  .section-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .lyrics-container,
+  .audio-container,
+  .events-container {
+    padding: 15px 20px;
+  }
+
+  .lyrics-content {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .audio-player-wrapper {
+    padding: 15px 20px;
+  }
+
+  .detail-audio {
+    height: 50px;
+  }
+
+  .video-item {
+    padding: 15px 20px;
+  }
+
+  .detail-video {
+    max-height: 300px;
+  }
+}
+
+/* 触摸设备专用样式 */
+@media (hover: none) and (pointer: coarse) {
+
+  .event-item:hover,
+  .audio-player-wrapper:hover,
+  .video-item:hover {
+    transform: none;
+    box-shadow: initial;
+  }
+
+  .detail-image:hover {
+    transform: none;
+    box-shadow: initial;
+  }
+
+  .lyrics-content:hover {
+    transform: none;
+    box-shadow: initial;
+  }
+
+  /* 为触摸设备增加按下状态 */
+  .retry-button:active {
+    transform: scale(0.95);
   }
 }
 </style>
