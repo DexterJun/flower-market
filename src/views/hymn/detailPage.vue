@@ -27,10 +27,6 @@
             您的浏览器不支持音频播放
           </audio>
         </div>
-        <!-- iOS兼容性提示 -->
-        <div class="audio-compatibility-note">
-          <p>💡 在iOS设备上，音频播放器将使用系统原生样式以获得最佳性能和用户体验。</p>
-        </div>
       </div>
 
       <!-- 活动列表 -->
@@ -46,9 +42,10 @@
           <!-- 视频播放器 -->
           <div v-if="event.videos && event.videos.length > 0" class="videos-container">
             <div v-for="(videoName, videoIndex) in event.videos" :key="videoIndex" class="video-item">
-              <video :src="getVideoUrl(event, videoIndex)" controls preload="metadata" class="detail-video"
+              <video :src="getVideoUrl(event, videoIndex)" controls preload="auto" class="detail-video"
                 controlsList="nodownload noremoteplayback" @loadstart="onVideoLoadStart(videoName)"
-                @canplay="onVideoCanPlay(videoName)" @error="onVideoError(videoName, $event)">
+                @canplay="onVideoCanPlay(videoName)" @error="onVideoError(videoName, $event)"
+                @loadedmetadata="onVideoLoadedMetadata(videoName)" playsinline>
                 您的浏览器不支持视频播放
               </video>
             </div>
@@ -179,6 +176,10 @@ const onVideoCanPlay = (videoName: string) => {
 const onVideoError = (videoName: string, event: Event) => {
   console.error(`视频 ${videoName} 加载失败:`, event);
   // 可以在这里添加错误提示
+};
+
+const onVideoLoadedMetadata = (videoName: string) => {
+  console.log(`视频 ${videoName} 元数据加载完成`);
 };
 
 // 音频事件处理
@@ -615,38 +616,47 @@ only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-de
 .detail-video {
   width: 100%;
   height: auto;
+  min-height: 200px;
   display: block;
   border-radius: 16px;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
   transition: all 0.3s ease;
   border: 2px solid rgba(255, 255, 255, 0.3);
   overflow: hidden;
-  background: transparent;
+  background: #000;
+  /* 设置黑色背景，这是视频的标准背景色 */
+  /* 确保视频内容可见 */
+  position: relative;
+  z-index: 1;
+  /* 确保视频能正确显示 */
+  object-fit: contain;
 }
 
+/* 确保视频控件正常工作 */
 .detail-video::-webkit-media-controls {
-  background: transparent;
+  /* 保持默认控件显示 */
 }
 
+/* 确保播放按钮和覆盖层可见 */
 .detail-video::-webkit-media-controls-overlay-play-button {
-  display: none;
+  /* 保持播放按钮可见 */
 }
 
 .detail-video::-webkit-media-controls-overlay-enclosure {
-  display: none;
+  /* 保持覆盖层可见 */
 }
 
 .detail-video::-webkit-media-controls-start-playback-button {
-  display: none;
+  /* 保持开始播放按钮可见 */
 }
 
-/* 优化视频控件显示 */
+/* 保持视频控件的正常显示 */
 .detail-video::-webkit-media-controls-enclosure {
   background: transparent;
 }
 
 .detail-video::-webkit-media-controls-overlay {
-  display: none;
+  /* 允许覆盖层显示，这样可以看到预览画面 */
 }
 
 .detail-video:hover {
@@ -658,9 +668,9 @@ only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-de
   outline-offset: 4px;
 }
 
-/* 视频播放器控件样式 */
+/* 视频播放器控件样式 - 保持基本功能 */
 
-/* 隐藏视频不需要的控件 */
+/* 只隐藏下载相关的控件 */
 .detail-video::-webkit-media-controls-download-button,
 .detail-video::-webkit-media-controls-overflow-button {
   display: none;
@@ -833,13 +843,24 @@ only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-de
   }
 
   .video-item {
-    padding: 20px 15px;
+    padding: 15px 10px;
   }
 
   .detail-video {
-    width: 100%;
-    height: auto;
-    min-height: 200px;
+    min-height: 180px;
+    /* iOS优化：确保视频预览正确显示 */
+    background: #000;
+    object-fit: contain;
+  }
+
+  /* iOS设备视频优化 */
+  @supports (-webkit-touch-callout: none) {
+    .detail-video {
+      /* iOS原生视频播放器优化 */
+      -webkit-playsinline: true;
+      webkit-playsinline: true;
+      background: #000;
+    }
   }
 
   .loading-container,
@@ -927,7 +948,10 @@ only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-de
   }
 
   .detail-video {
-    min-height: 180px;
+    min-height: 160px;
+    /* 超小屏幕iOS视频优化 */
+    background: #000;
+    object-fit: contain;
   }
 
   .image-container {
@@ -1011,6 +1035,9 @@ only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-de
 
   .detail-video {
     min-height: 160px;
+    /* 超小屏幕iOS视频优化 */
+    background: #000;
+    object-fit: contain;
   }
 
   .event-item {
@@ -1102,48 +1129,6 @@ only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-de
   /* 为触摸设备增加按下状态 */
   .retry-button:active {
     transform: scale(0.95);
-  }
-}
-
-/* 音频兼容性提示样式 */
-.audio-compatibility-note {
-  margin-top: 15px;
-  padding: 12px 20px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  display: none;
-  /* 默认隐藏 */
-}
-
-.audio-compatibility-note p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 13px;
-  line-height: 1.4;
-  text-align: center;
-  font-weight: 500;
-}
-
-/* 在iOS设备上显示兼容性提示 */
-@supports (-webkit-touch-callout: none) {
-  .audio-compatibility-note {
-    display: block;
-  }
-}
-
-/* 在移动设备上也显示提示 */
-@media screen and (max-width: 768px) {
-  .audio-compatibility-note {
-    display: block;
-    margin-top: 12px;
-    padding: 10px 15px;
-    font-size: 12px;
-  }
-
-  .audio-compatibility-note p {
-    font-size: 12px;
   }
 }
 </style>
