@@ -17,12 +17,27 @@
         <div class="lyrics-content">{{ hymnData.detail.lyrics }}</div>
       </div>
 
-      <!-- 视频播放器 -->
-      <div v-if="hasVideo" class="video-container">
-        <video ref="videoPlayer" :src="hymnData.detail?.video_file" controls preload="metadata" class="detail-video"
-          @loadstart="onVideoLoadStart" @canplay="onVideoCanPlay" @error="onVideoError">
-          您的浏览器不支持视频播放
-        </video>
+      <!-- 活动列表 -->
+      <div v-if="hymnData.detail?.events && hymnData.detail.events.length > 0" class="events-container">
+        <h3 class="section-title">相关活动</h3>
+        <div v-for="(event, eventIndex) in hymnData.detail.events" :key="eventIndex" class="event-item">
+          <div class="event-info">
+            <h4 class="event-name">{{ event.name }}</h4>
+            <div class="event-date">{{ formatDate(event.date) }}</div>
+            <div v-if="event.description" class="event-description">{{ event.description }}</div>
+          </div>
+
+          <!-- 视频播放器 -->
+          <div v-if="event.videos && event.videos.length > 0" class="videos-container">
+            <div v-for="(videoName, videoIndex) in event.videos" :key="videoIndex" class="video-item">
+              <video :src="getVideoUrl(event, videoIndex)" controls preload="metadata" class="detail-video"
+                @loadstart="onVideoLoadStart(videoName)" @canplay="onVideoCanPlay(videoName)"
+                @error="onVideoError(videoName, $event)">
+                您的浏览器不支持视频播放
+              </video>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -44,6 +59,14 @@ import { useRouter, useRoute } from 'vue-router';
 // @ts-ignore
 import { imageApi } from '../../api/images';
 
+interface EventItem {
+  name: string;
+  date: string;
+  description?: string;
+  videos?: string[];
+  video_urls?: string[];
+}
+
 interface HymnData {
   id: string;
   filename: string;
@@ -54,7 +77,7 @@ interface HymnData {
   detail?: {
     title?: string;
     lyrics?: string;
-    video_file?: string;
+    events?: EventItem[];
   };
 }
 
@@ -67,16 +90,36 @@ const hymnData = ref<HymnData | null>(null);
 const loading = ref(false);
 const error = ref<string | null>(null);
 
-// 视频播放器引用
-const videoPlayer = ref<HTMLVideoElement | null>(null);
-
-// 计算属性：是否有视频
-const hasVideo = computed(() => {
-  return hymnData.value?.detail?.video_file &&
-    hymnData.value.detail.video_file.startsWith('http');
+// 计算属性：是否有活动
+const hasEvents = computed(() => {
+  return hymnData.value?.detail?.events &&
+    hymnData.value.detail.events.length > 0;
 });
 
+// 格式化日期
+const formatDate = (dateString: string) => {
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('zh-CN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  } catch (err) {
+    return dateString;
+  }
+};
 
+// 获取视频URL
+const getVideoUrl = (event: EventItem, videoIndex: number) => {
+  // 如果有video_urls字段，使用它
+  if (event.video_urls && event.video_urls[videoIndex]) {
+    return event.video_urls[videoIndex];
+  }
+
+  // 如果没有video_urls，返回空字符串，让视频显示错误
+  return '';
+};
 
 // 加载诗歌详情
 const loadHymnDetail = async () => {
@@ -108,16 +151,16 @@ const loadHymnDetail = async () => {
 };
 
 // 视频事件处理
-const onVideoLoadStart = () => {
-  console.log('视频开始加载');
+const onVideoLoadStart = (videoName: string) => {
+  console.log(`视频 ${videoName} 开始加载`);
 };
 
-const onVideoCanPlay = () => {
-  console.log('视频可以播放');
+const onVideoCanPlay = (videoName: string) => {
+  console.log(`视频 ${videoName} 可以播放`);
 };
 
-const onVideoError = (event: Event) => {
-  console.error('视频加载失败:', event);
+const onVideoError = (videoName: string, event: Event) => {
+  console.error(`视频 ${videoName} 加载失败:`, event);
   // 可以在这里添加错误提示
 };
 
@@ -129,71 +172,225 @@ onMounted(() => {
 
 <style scoped>
 .detail-content {
-  max-width: 800px;
+  max-width: 900px;
   margin: 20px auto;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+/* 动画效果 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* 标题容器样式 */
 .title-container {
-  padding: 30px 30px 20px 30px;
+  padding: 25px 30px 20px 30px;
   text-align: center;
-  border-bottom: 1px solid #eef2f7;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  position: relative;
+}
+
+.title-container::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
 }
 
 .hymn-title {
-  font-size: 28px;
-  color: #2c3e50;
+  font-size: 32px;
   margin: 0;
-  font-weight: 600;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  letter-spacing: 1px;
 }
 
 .image-container {
   width: 100%;
   display: flex;
   justify-content: center;
-  background: #f8f9fa;
+  background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .detail-image {
-  max-width: 100%;
+  max-width: calc(100% - 40px);
+  width: auto;
   height: auto;
   display: block;
+  border-radius: 16px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  object-fit: contain;
+}
+
+.detail-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
 }
 
 /* 歌词容器样式 */
 .lyrics-container {
-  padding: 30px;
-  border-bottom: 1px solid #eef2f7;
+  padding: 25px 30px;
+  background: linear-gradient(to right, #f8f9fa, #ffffff);
 }
 
 .section-title {
-  font-size: 18px;
+  font-size: 24px;
   color: #2c3e50;
-  margin: 0 0 15px 0;
-  font-weight: 600;
+  margin: 0 0 18px 0;
+  font-weight: 700;
   text-align: center;
+  position: relative;
+  padding-bottom: 12px;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 2px;
 }
 
 .lyrics-content {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 12px;
+  background: linear-gradient(135deg, #f8f9ff, #fff8f8);
+  padding: 25px;
+  border-radius: 20px;
   white-space: pre-wrap;
-  line-height: 1.8;
+  line-height: 2;
   color: #2c3e50;
-  font-size: 15px;
+  font-size: 16px;
   text-align: left;
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.lyrics-content:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* 活动容器样式 */
+.events-container {
+  padding: 25px 30px;
+  background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+}
+
+.event-item {
+  margin-bottom: 25px;
+  padding: 20px 25px;
+  background: linear-gradient(135deg, #ffffff, #f8f9ff);
+  border-radius: 20px;
+  border-left: 6px solid transparent;
+  background-image: linear-gradient(135deg, #ffffff, #f8f9ff),
+    linear-gradient(135deg, #667eea, #764ba2);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  animation: slideInLeft 0.6s ease-out;
+  animation-delay: calc(var(--delay, 0) * 0.1s);
+}
+
+.event-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+}
+
+.event-item:last-child {
+  margin-bottom: 0;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.event-info {
+  margin-bottom: 18px;
+}
+
+.event-name {
+  font-size: 20px;
+  color: #2c3e50;
+  margin: 0 0 10px 0;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.event-date {
+  font-size: 15px;
+  color: #667eea;
+  margin-bottom: 10px;
+  font-weight: 600;
+  display: inline-block;
+  padding: 6px 12px;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 20px;
+}
+
+.event-description {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.7;
+  padding: 8px 0;
 }
 
 /* 视频容器样式 */
-.video-container {
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 0 0 16px 16px;
+.videos-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.video-item {
+  background: linear-gradient(135deg, #ffffff, #f8f9ff);
+  padding: 18px;
+  border-radius: 16px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  transition: all 0.3s ease;
+}
+
+.video-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
 }
 
 .detail-video {
@@ -201,7 +398,12 @@ onMounted(() => {
   height: auto;
   display: block;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.detail-video:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 /* 加载状态样式 */
@@ -212,22 +414,28 @@ onMounted(() => {
   justify-content: center;
   padding: 40px 20px;
   text-align: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 24px;
+  margin: 20px auto;
+  max-width: 400px;
 }
 
 .loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #4a90e2;
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid white;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 
 .loading-text {
-  color: #666;
-  font-size: 14px;
-  font-weight: 500;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* 错误状态样式 */
@@ -238,28 +446,39 @@ onMounted(() => {
   justify-content: center;
   padding: 40px 20px;
   text-align: center;
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  color: white;
+  border-radius: 24px;
+  margin: 20px auto;
+  max-width: 400px;
 }
 
 .error-text {
-  color: #e74c3c;
-  font-size: 14px;
-  margin-bottom: 16px;
+  color: white;
+  font-size: 16px;
+  margin-bottom: 20px;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .retry-button {
-  background: #4a90e2;
+  background: rgba(255, 255, 255, 0.2);
   color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
+  border: 2px solid white;
+  padding: 12px 24px;
+  border-radius: 25px;
   cursor: pointer;
   font-size: 14px;
-  transition: all 0.2s;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
 .retry-button:hover {
-  background: #357abd;
-  transform: translateY(-1px);
+  background: white;
+  color: #ff6b6b;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 /* 旋转动画 */
@@ -275,35 +494,98 @@ onMounted(() => {
 
 /* 移动端适配 */
 @media screen and (max-width: 768px) {
-
   .detail-content {
     margin: 10px;
+    border-radius: 20px;
   }
 
   .title-container {
-    padding: 20px 20px 15px 20px;
+    padding: 20px 20px 16px 20px;
   }
 
   .hymn-title {
-    font-size: 24px;
+    font-size: 26px;
   }
 
-  .lyrics-container {
+  .image-container {
+    padding: 15px;
+  }
+
+  .detail-image {
+    max-width: calc(100% - 30px);
+  }
+
+  .lyrics-container,
+  .events-container {
     padding: 20px;
   }
 
   .lyrics-content {
-    font-size: 14px;
-    padding: 15px;
-    line-height: 1.6;
+    font-size: 15px;
+    padding: 20px;
+    line-height: 1.8;
   }
 
-  .video-container {
-    padding: 10px;
+  .event-item {
+    padding: 18px 15px;
+    margin-bottom: 20px;
+  }
+
+  .event-name {
+    font-size: 18px;
   }
 
   .section-title {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+
+  .video-item {
+    padding: 15px;
+  }
+
+  .loading-container,
+  .error-container {
+    margin: 10px;
+    padding: 30px 20px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .hymn-title {
+    font-size: 22px;
+  }
+
+  .section-title {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .event-name {
     font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .lyrics-content {
+    font-size: 14px;
+    padding: 18px;
+  }
+
+  .event-item {
+    padding: 15px 12px;
+    margin-bottom: 15px;
+  }
+
+  .event-info {
+    margin-bottom: 15px;
+  }
+
+  .image-container {
+    padding: 10px;
+  }
+
+  .detail-image {
+    max-width: calc(100% - 20px);
   }
 }
 </style>

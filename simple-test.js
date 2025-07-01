@@ -1,0 +1,1 @@
+﻿const fs = require("fs"); console.log("开始测试"); const data = fs.readFileSync("./api/catalog.json", "utf8"); const catalog = JSON.parse(data); console.log("catalog长度:", catalog.length); const item = catalog.find(i => i.filename === "一道江河"); if(item) { console.log("找到一道江河, events:", JSON.stringify(item.detail?.events, null, 2)); } else { console.log("未找到"); }
