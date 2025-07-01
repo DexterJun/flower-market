@@ -4,13 +4,6 @@
       <!-- 标题 -->
       <div class="title-container">
         <h2 class="hymn-title">{{ hymnData.filename }}</h2>
-        <button class="share-button" @click="shareContent" title="分享到微信">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-            <path
-              d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.50-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92S19.61 16.08 18 16.08z" />
-          </svg>
-          分享
-        </button>
       </div>
 
       <!-- 图片容器 -->
@@ -74,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, onUnmounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 // @ts-ignore
 import { imageApi } from '../../api/images';
@@ -163,9 +156,6 @@ const loadHymnDetail = async () => {
       document.title = data.filename;
     }
 
-    // 设置页面Meta标签用于微信分享
-    setPageMeta(data);
-
   } catch (err) {
     error.value = '加载详情失败，请稍后重试';
     console.error('Error loading hymn detail:', err);
@@ -206,129 +196,9 @@ const onAudioError = (event: Event) => {
   // 可以在这里添加错误提示
 };
 
-// 设置页面Meta标签用于微信分享
-const setPageMeta = (hymn: HymnData) => {
-  // 设置页面标题
-  document.title = hymn.filename || '898 花卉市场';
-
-  // 移除旧的Meta标签
-  const existingMetas = document.querySelectorAll('meta[property^="og:"], meta[name="description"], meta[name="keywords"]');
-  existingMetas.forEach(meta => meta.remove());
-
-  // 创建Meta标签
-  const createMeta = (property: string, content: string, isProperty = true) => {
-    const meta = document.createElement('meta');
-    if (isProperty) {
-      meta.setAttribute('property', property);
-    } else {
-      meta.setAttribute('name', property);
-    }
-    meta.setAttribute('content', content);
-    document.head.appendChild(meta);
-  };
-
-  // 确保图片URL是完整的绝对URL
-  const getAbsoluteUrl = (url: string) => {
-    if (!url) return `${window.location.origin}/favicon.ico`;
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      return url; // 已经是完整URL
-    }
-    if (url.startsWith('/')) {
-      return `${window.location.origin}${url}`; // 绝对路径
-    }
-    return `${window.location.origin}/${url}`; // 相对路径
-  };
-
-  // 基本信息
-  const title = hymn.filename || '898 花卉市场';
-  const description = hymn.detail?.lyrics
-    ? `${hymn.detail.lyrics.replace(/\n/g, ' ').substring(0, 120)}...`
-    : `分享来自898花卉市场的美好内容：${hymn.filename}`;
-  const imageUrl = getAbsoluteUrl(hymn.url);
-  const currentUrl = window.location.href;
-
-  // 设置Open Graph标签（用于微信分享）
-  createMeta('og:title', title);
-  createMeta('og:description', description);
-  createMeta('og:image', imageUrl);
-  createMeta('og:image:width', '1200');
-  createMeta('og:image:height', '630');
-  createMeta('og:url', currentUrl);
-  createMeta('og:type', 'article');
-  createMeta('og:site_name', '898 花卉市场');
-
-  // 设置Twitter Card标签（增强兼容性）
-  createMeta('twitter:card', 'summary_large_image');
-  createMeta('twitter:title', title);
-  createMeta('twitter:description', description);
-  createMeta('twitter:image', imageUrl);
-
-  // 设置普通Meta标签
-  createMeta('description', description, false);
-  createMeta('keywords', `诗歌,赞美,898花卉市场,${hymn.filename}`, false);
-
-  // 微信专用标签
-  createMeta('weixin:card', 'summary_large_image');
-  createMeta('weixin:image', imageUrl);
-
-  console.log('微信分享Meta标签设置完成:', {
-    title,
-    description,
-    imageUrl,
-    currentUrl
-  });
-};
-
-// 分享功能
-const shareContent = async () => {
-  if (!hymnData.value) return;
-
-  const shareData = {
-    title: hymnData.value.filename || '898 花卉市场',
-    text: hymnData.value.detail?.lyrics
-      ? `${hymnData.value.detail.lyrics.replace(/\n/g, ' ').substring(0, 100)}...`
-      : `分享来自898花卉市场的美好内容：${hymnData.value.filename}`,
-    url: window.location.href
-  };
-
-  try {
-    // 检查是否支持Web Share API
-    if (navigator.share) {
-      await navigator.share(shareData);
-      console.log('分享成功');
-    } else {
-      // 降级方案：复制链接到剪贴板
-      await navigator.clipboard.writeText(window.location.href);
-      alert('链接已复制到剪贴板，您可以粘贴到微信进行分享！');
-    }
-  } catch (err) {
-    console.log('分享被取消或失败:', err);
-    // 如果Web Share API失败，尝试复制链接
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      alert('链接已复制到剪贴板，您可以粘贴到微信进行分享！');
-    } catch (clipboardErr) {
-      // 最后的降级方案
-      const textArea = document.createElement('textarea');
-      textArea.value = window.location.href;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      alert('链接已复制到剪贴板，您可以粘贴到微信进行分享！');
-    }
-  }
-};
-
 // 初始化
 onMounted(() => {
   loadHymnDetail();
-});
-
-onUnmounted(() => {
-  // 清理Meta标签
-  const existingMetas = document.querySelectorAll('meta[property^="og:"], meta[name="description"], meta[name="keywords"]');
-  existingMetas.forEach(meta => meta.remove());
 });
 </script>
 
@@ -384,46 +254,6 @@ onUnmounted(() => {
   font-weight: 700;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   letter-spacing: 1px;
-}
-
-/* 分享按钮样式 */
-.share-button {
-  position: absolute;
-  top: 25px;
-  right: 30px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 10px 16px;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.share-button:hover {
-  transform: none;
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: none;
-}
-
-.share-button:active {
-  transform: scale(0.95);
-}
-
-.share-button svg {
-  transition: transform 0.3s ease;
-}
-
-.share-button:hover svg {
-  transform: scale(1.1);
 }
 
 .image-container {
@@ -1045,14 +875,6 @@ only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-de
     font-size: 11px;
     padding: 2px 4px;
   }
-
-  .share-button {
-    top: 20px;
-    right: 20px;
-    padding: 8px 12px;
-    font-size: 12px;
-    gap: 6px;
-  }
 }
 
 @media screen and (max-width: 480px) {
@@ -1167,16 +989,6 @@ only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-de
     font-size: 10px;
     padding: 1px 3px;
   }
-
-  .share-button {
-    top: 18px;
-    right: 15px;
-    padding: 7px 11px;
-    font-size: 11px;
-    gap: 5px;
-    min-height: 36px;
-    /* 确保触摸目标足够大 */
-  }
 }
 
 /* 超小屏幕适配 */
@@ -1243,16 +1055,6 @@ only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-de
   .event-description {
     font-size: 13px;
   }
-
-  .share-button {
-    top: 15px;
-    right: 12px;
-    padding: 6px 10px;
-    font-size: 10px;
-    gap: 4px;
-    min-height: 32px;
-    /* 确保触摸目标足够大 */
-  }
 }
 
 /* 横屏模式适配 */
@@ -1302,14 +1104,6 @@ only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-de
   .detail-video {
     max-height: 300px;
   }
-
-  .share-button {
-    top: 15px;
-    right: 20px;
-    padding: 6px 12px;
-    font-size: 12px;
-    gap: 5px;
-  }
 }
 
 /* 触摸设备专用样式 */
@@ -1335,18 +1129,6 @@ only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-de
   /* 为触摸设备增加按下状态 */
   .retry-button:active {
     transform: scale(0.95);
-  }
-
-  .share-button:active {
-    transform: scale(0.95);
-  }
-
-  /* 移除分享按钮的hover效果 */
-  .share-button:hover {
-    transform: none;
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
-    box-shadow: none;
   }
 }
 </style>
