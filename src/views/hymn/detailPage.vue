@@ -27,6 +27,10 @@
             您的浏览器不支持音频播放
           </audio>
         </div>
+        <!-- iOS兼容性提示 -->
+        <div class="audio-compatibility-note">
+          <p>💡 在iOS设备上，音频播放器将使用系统原生样式以获得最佳性能和用户体验。</p>
+        </div>
       </div>
 
       <!-- 活动列表 -->
@@ -376,59 +380,139 @@ onMounted(() => {
   transform: scale(1.02);
 }
 
-.detail-audio::-webkit-media-controls-panel {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 249, 255, 0.95));
-  border-radius: 14px;
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.2);
+/* 桌面版WebKit样式（仅在支持的浏览器中生效） */
+@supports (-webkit-appearance: none) {
+  .detail-audio::-webkit-media-controls-panel {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 249, 255, 0.95));
+    border-radius: 14px;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.2);
+  }
+
+  .detail-audio::-webkit-media-controls-timeline {
+    background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+    border-radius: 8px;
+    margin-left: 10px;
+    height: 6px;
+    box-shadow: 0 2px 8px rgba(108, 92, 231, 0.4);
+  }
+
+  .detail-audio::-webkit-media-controls-current-time-display,
+  .detail-audio::-webkit-media-controls-time-remaining-display {
+    color: #ffffff;
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(69, 69, 69, 0.4);
+    background: rgba(108, 92, 231, 0.3);
+    border-radius: 8px;
+    padding: 3px 8px;
+    font-size: 12px;
+    border: 1px solid rgba(162, 155, 254, 0.4);
+    backdrop-filter: blur(5px);
+  }
+
+  /* 隐藏不需要的控件 */
+  .detail-audio::-webkit-media-controls-download-button,
+  .detail-audio::-webkit-media-controls-overflow-button,
+  .detail-audio::-webkit-media-controls-overflow-menu-button,
+  .detail-audio::-webkit-media-controls-toggle-closed-captions-button,
+  .detail-audio::-webkit-media-controls-fullscreen-button,
+  .detail-audio::-webkit-media-controls-picture-in-picture-button,
+  .detail-audio::-webkit-media-controls-cast-button,
+  .detail-audio::-webkit-media-controls-more-button {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* 通用隐藏所有可能的更多按钮 */
+  .detail-audio audio::-webkit-media-controls button[aria-label*="更多"],
+  .detail-audio audio::-webkit-media-controls button[aria-label*="More"],
+  .detail-audio audio::-webkit-media-controls button[title*="更多"],
+  .detail-audio audio::-webkit-media-controls button[title*="More"],
+  .detail-audio audio::-webkit-media-controls [role="button"]:last-child {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
 }
 
-.detail-audio::-webkit-media-controls-timeline {
-  background: linear-gradient(135deg, #a29bfe, #6c5ce7);
-  border-radius: 8px;
-  margin-left: 10px;
-  height: 6px;
-  box-shadow: 0 2px 8px rgba(108, 92, 231, 0.4);
+/* iOS专用样式 - iOS设备上使用原生控件 */
+@media screen and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait),
+screen and (-webkit-min-device-pixel-ratio: 2) and (orientation: landscape) {
+
+  /* iOS设备检测 */
+  @supports (-webkit-touch-callout: none) {
+    .audio-player-wrapper {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+      border-radius: 20px;
+    }
+
+    .detail-audio {
+      height: 50px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      /* iOS上保持简洁的样式，不尝试自定义控件 */
+    }
+
+    /* iOS上移除hover效果，因为触摸设备没有hover */
+    .audio-player-wrapper:hover {
+      transform: none;
+      box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3);
+    }
+
+    .detail-audio:focus {
+      transform: none;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+  }
 }
 
-.detail-audio::-webkit-media-controls-current-time-display,
-.detail-audio::-webkit-media-controls-time-remaining-display {
-  color: #ffffff;
-  font-weight: 600;
-  text-shadow: 0 1px 3px rgba(69, 69, 69, 0.4);
-  background: rgba(108, 92, 231, 0.3);
-  border-radius: 8px;
-  padding: 3px 8px;
-  font-size: 12px;
-  border: 1px solid rgba(162, 155, 254, 0.4);
-  backdrop-filter: blur(5px);
+/* iPhone特定样式 */
+@media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3),
+only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2),
+only screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) {
+
+  .audio-player-wrapper {
+    padding: 15px;
+    margin: 0 5px;
+  }
+
+  .detail-audio {
+    height: 44px;
+    /* iOS推荐的最小触摸目标高度 */
+    max-width: 100%;
+  }
 }
 
-/* 隐藏不需要的控件 */
-.detail-audio::-webkit-media-controls-download-button,
-.detail-audio::-webkit-media-controls-overflow-button,
-.detail-audio::-webkit-media-controls-overflow-menu-button,
-.detail-audio::-webkit-media-controls-toggle-closed-captions-button,
-.detail-audio::-webkit-media-controls-fullscreen-button,
-.detail-audio::-webkit-media-controls-picture-in-picture-button,
-.detail-audio::-webkit-media-controls-cast-button,
-.detail-audio::-webkit-media-controls-more-button {
-  display: none !important;
-  visibility: hidden !important;
+/* iPad特定样式 */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) {
+
+  .audio-player-wrapper {
+    padding: 25px;
+  }
+
+  .detail-audio {
+    height: 55px;
+  }
 }
 
-/* 通用隐藏所有可能的更多按钮 */
-.detail-audio audio::-webkit-media-controls button[aria-label*="更多"],
-.detail-audio audio::-webkit-media-controls button[aria-label*="More"],
-.detail-audio audio::-webkit-media-controls button[title*="更多"],
-.detail-audio audio::-webkit-media-controls button[title*="More"],
-.detail-audio audio::-webkit-media-controls [role="button"]:last-child {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  width: 0 !important;
-  height: 0 !important;
+/* Safari浏览器特定样式（非iOS） */
+@media not all and (hover: none) {
+  @supports (-webkit-appearance: none) and (not (-webkit-touch-callout: none)) {
+
+    /* 桌面Safari的增强样式 */
+    .detail-audio::-webkit-media-controls-panel {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(248, 249, 255, 0.98));
+      border-radius: 14px;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+    }
+  }
 }
 
 /* 活动容器样式 */
@@ -1018,6 +1102,48 @@ onMounted(() => {
   /* 为触摸设备增加按下状态 */
   .retry-button:active {
     transform: scale(0.95);
+  }
+}
+
+/* 音频兼容性提示样式 */
+.audio-compatibility-note {
+  margin-top: 15px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  display: none;
+  /* 默认隐藏 */
+}
+
+.audio-compatibility-note p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* 在iOS设备上显示兼容性提示 */
+@supports (-webkit-touch-callout: none) {
+  .audio-compatibility-note {
+    display: block;
+  }
+}
+
+/* 在移动设备上也显示提示 */
+@media screen and (max-width: 768px) {
+  .audio-compatibility-note {
+    display: block;
+    margin-top: 12px;
+    padding: 10px 15px;
+    font-size: 12px;
+  }
+
+  .audio-compatibility-note p {
+    font-size: 12px;
   }
 }
 </style>

@@ -953,11 +953,11 @@ onUnmounted(() => {
 /* 丝带标签样式 */
 .image-ribbon {
   position: absolute;
-  top: 10px;
-  right: -8px;
+  top: 12px;
+  right: -15px;
   background: linear-gradient(45deg, var(--primary-color) 0%, #357abd 100%);
   color: white;
-  padding: 6px 12px 6px 16px;
+  padding: 6px 18px 6px 20px;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
@@ -966,7 +966,7 @@ onUnmounted(() => {
   transform-origin: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 10;
-  min-width: 60px;
+  min-width: 70px;
   text-align: center;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -998,7 +998,7 @@ onUnmounted(() => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 80px;
+  max-width: 90px;
 }
 
 .image-card:hover .image-ribbon {
@@ -1009,15 +1009,34 @@ onUnmounted(() => {
 /* 移动端丝带适配 */
 @media screen and (max-width: 768px) {
   .image-ribbon {
-    top: 8px;
-    left: -6px;
-    padding: 4px 12px 4px 8px;
-    font-size: 10px;
+    top: 10px;
+    right: -12px;
+    padding: 3px 12px 3px 14px;
+    font-size: 8px;
     min-width: 50px;
+    transform: rotate(45deg);
+    transform-origin: center;
+    letter-spacing: 0.3px;
   }
 
   .ribbon-text {
-    max-width: 60px;
+    max-width: 55px;
+  }
+}
+
+/* 超小屏幕丝带适配 */
+@media screen and (max-width: 480px) {
+  .image-ribbon {
+    top: 8px;
+    right: -10px;
+    padding: 2px 10px 2px 12px;
+    font-size: 7px;
+    min-width: 45px;
+    letter-spacing: 0.2px;
+  }
+
+  .ribbon-text {
+    max-width: 45px;
   }
 }
 </style>
