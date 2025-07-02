@@ -27,6 +27,14 @@ const router = createRouter({
         title: "青年团契诗歌集",
       },
     },
+    {
+      path: "/hymn/manage",
+      name: "HymnManage",
+      component: () => import("@/views/hymn/manage.vue"),
+      meta: {
+        title: "诗歌集管理",
+      },
+    },
   ],
 });
 
@@ -38,4 +46,3 @@ router.beforeEach((to, from, next) => {
 });
 
 export default router;
- 
