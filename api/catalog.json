@@ -3,313 +3,677 @@
     "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
     "filename": "我们成为一家人",
     "index": 1,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "我们成为一家人",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "550e8400-e29b-41d4-a716-446655440001",
     "filename": "这条路上我们一起走",
     "index": 2,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "这条路上我们一起走",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
     "filename": "活出爱",
     "index": 3,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "活出爱",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "123e4567-e89b-12d3-a456-426614174002",
     "filename": "耶和华是爱",
     "index": 4,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "耶和华是爱",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "a3bb68e0-7b5f-11eb-9439-0242ac130003",
     "filename": "赞美之泉",
     "index": 5,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "赞美之泉",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "b3cd1f2a-9cf0-4a3d-8f1c-0d6e4f9c8d3e",
     "filename": "和撒那",
     "index": 6,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "和撒那",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "c4de5f3b-0a1c-4b2d-8e3f-1f2a3b4c5d6e",
     "filename": "你是最特别的拣选",
     "index": 7,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "你是最特别的拣选",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "d5ef6g7h-8i9j-0k1l-2m3n-4o5p6q7r8s9t",
     "filename": "陪我走过春夏秋冬",
     "index": 8,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "陪我走过春夏秋冬",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "e6f7g8h9-i0j1-k2l3-m4n5-o6p7q8r9s0t1u",
     "filename": "点燃复兴的火焰",
     "index": 9,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "点燃复兴的火焰",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "f7g8h9i0-j1k2-l3m4-n5o6-p7q8r9s0t1u2v",
     "filename": "渴望复兴的火",
     "index": 10,
-    "type": "png"
+    "type": "png",
+    "tag": "",
+    "detail": {
+      "title": "渴望复兴的火",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "g8h9i0j1-k2l3-m4n5-o6p7-q8r9s0t1u2v3w",
     "filename": "云上太阳",
     "index": 11,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "云上太阳",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "h9i0j1k2-l3m4-n5o6-p7q8-r9s0t1u2v3w4x",
     "filename": "心愿",
     "index": 12,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "心愿",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "i0j1k2l3-m4n5-o6p7-q8r9-s0t1u2v3w4x5y",
     "filename": "耶稣掌权",
     "index": 13,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "耶稣掌权",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "j1k2l3m4-n5o6-p7q8-r9s0-t1u2v3w4x5y6z",
     "filename": "耶稣，耶稣",
     "index": 14,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "耶稣，耶稣",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "k2l3m4n5-o6p7-q8r9-s0t1-u2v3w4x5y6z7a",
     "filename": "恩典之路",
     "index": 15,
-    "type": "png"
+    "type": "png",
+    "tag": "",
+    "detail": {
+      "title": "恩典之路",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "l3m4n5o6-p7q8-r9s0-t1u2-v3w4x5y6z7a8b",
     "filename": "除你以外",
     "index": 16,
-    "type": "png"
+    "type": "png",
+    "tag": "",
+    "detail": {
+      "title": "除你以外",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "m4n5o6p7-q8r9-s0t1-u2v3-w4x5y6z7a8b9c",
     "filename": "敬拜你圣名",
     "index": 17,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "敬拜你圣名",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "n5o6p7q8-r9s0-t1u2-v3w4-x5y6z7a8b9c0d",
     "filename": "敬拜的时候",
     "index": 18,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "敬拜的时候",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "o6p7q8r9-s0t1-u2v3-w4x5-y6z7a8b9c0d1e",
     "filename": "奔跑不放弃",
     "index": 19,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "奔跑不放弃",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "p7q8r9s0-t1u2-v3w4-x5y6-z7a8b9c0d1e2f",
     "filename": "你的爱不离不弃",
     "index": 20,
-    "type": "png"
+    "type": "png",
+    "tag": "",
+    "detail": {
+      "title": "你的爱不离不弃",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "q8r9s0t1-u2v3-w4x5-y6z7-a8b9c0d1e2f3g",
     "filename": "shalom平安",
     "index": 21,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "shalom平安",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "r9s0t1u2-v3w4-x5y6-z7a8-b9c0d1e2f3g4h",
     "filename": "我们要在聚会的山上",
     "index": 22,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "我们要在聚会的山上",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "s0t1u2v3-w4x5-y6z7-a8b9-c0d1e2f3g4h5i",
     "filename": "主赐福如春雨",
     "index": 23,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "主赐福如春雨",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "t1u2v3w4-x5y6-z7a8-b9c0-d1e2f3g4h5i6j",
     "filename": "一粒麦子",
     "index": 24,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "一粒麦子",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "u2v3w4x5-y6z7-a8b9-c0d1-e2f3g4h5i6j7k",
     "filename": "主，我邀请你",
     "index": 25,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "主，我邀请你",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "v3w4x5y6-z7a8-b9c0-d1e2-f3g4h5i6j7k8l",
     "filename": "主啊！陶造我",
     "index": 26,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "主啊！陶造我",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "w4x5y6z7-a8b9-c0d1-e2f3-g4h5i6j7k8l9m",
     "filename": "立定心志",
     "index": 27,
-    "type": "png"
+    "type": "png",
+    "tag": "",
+    "detail": {
+      "title": "立定心志",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "x5y6z7a8-b9c0-d1e2-f3g4-h5i6j7k8l9m0n",
     "filename": "有一天",
     "index": 28,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "有一天",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "y6z7a8b9-c0d1-e2f3-g4h5-i6j7k8l9m0n1o",
     "filename": "我需要有你在我生命中",
     "index": 29,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "我需要有你在我生命中",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "z7a8b9c0-d1e2-f3g4-h5i6-j7k8l9m0n1o2p",
     "filename": "是这份爱",
     "index": 30,
-    "type": "png"
+    "type": "png",
+    "tag": "",
+    "detail": {
+      "title": "是这份爱",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "a8b9c0d1-e2f3-g4h5-i6j7-k8l9m0n1o2p3q",
     "filename": "全然向你",
     "index": 31,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "全然向你",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "b9c0d1e2-f3g4-h5i6-j7k8-l9m0n1o2p3q4r",
     "filename": "亲眼看见你",
     "index": 32,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "亲眼看见你",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "c0d1e2f3-g4h5-i6j7-k8l9-m0n1o2p3q4r5s",
     "filename": "我们乃主精兵",
     "index": 33,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "我们乃主精兵",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "d1e2f3g4-h5i6-j7k8-l9m0-n1o2p3q4r5s6t",
     "filename": "有一位神",
     "index": 34,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "有一位神",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "e2f3g4h5-i6j7-k8l9-m0n1-o2p3q4r5s6t7u",
     "filename": "唯独依靠你",
     "index": 35,
-    "type": "png"
+    "type": "png",
+    "tag": "",
+    "detail": {
+      "title": "唯独依靠你",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "f3g4h5i6-j7k8-l9m0-n1o2-p3q4r5s6t7u8v",
     "filename": "因他活着",
     "index": 36,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "因他活着",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "g4h5i6j7-k8l9-m0n1-o2p3-q4r5s6t7u8v9w",
     "filename": "宝贵十架",
     "index": 37,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "宝贵十架",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "h5i6j7k8-l9m0-n1o2-p3q4-r5s6t7u8v9w0x",
     "filename": "世界有你会更美好",
     "index": 38,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "世界有你会更美好",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "i6j7k8l9-m0n1-o2p3-q4r5-s6t7u8v9w0x1y",
     "filename": "一万个理由称颂主",
     "index": 39,
-    "type": "png"
+    "type": "png",
+    "tag": "",
+    "detail": {
+      "title": "一万个理由称颂主",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "j7k8l9m0-n1o2-p3q4-r5s6-t7u8v9w0x1y2z",
     "filename": "世界是旅行地方",
     "index": 40,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "世界是旅行地方",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "k8l9m0n1-o2p3-q4r5-s6t7-u8v9w0x1y2z3a",
     "filename": "看哪弟兄和睦同居",
     "index": 41,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "看哪弟兄和睦同居",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "l9m0n1o2-p3q4-r5s6-t7u8-v9w0x1y2z3a4b",
     "filename": "我们是光明之子",
     "index": 42,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "我们是光明之子",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "m0n1o2p3-q4r5-s6t7-u8v9-w0x1y2z3a4b5c",
     "filename": "相约在主里",
     "index": 43,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "相约在主里",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "n1o2p3q4-r5s6-t7u8-v9w0-x1y2z3a4b5c6d",
     "filename": "如鹿切慕溪水",
     "index": 44,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "如鹿切慕溪水",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "o2p3q4r5-s6t7-u8v9-w0x1-y2z3a4b5c6d7e",
     "filename": "这一生最美的祝福",
     "index": 45,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "这一生最美的祝福",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "p3q4r5s6-t7u8-v9w0-x1y2-z3a4b5c6d7e8f",
     "filename": "求主充满我",
     "index": 46,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "求主充满我",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "q4r5s6t7-u8v9-w0x1-y2z3-a4b5c6d7e8f9g",
     "filename": "奇异恩典",
     "index": 47,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "奇异恩典",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "r5s6t7u8-v9w0-x1y2-z3a4-b5c6d7e8f9g0h",
     "filename": "爱，我愿意",
     "index": 48,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "爱，我愿意",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "s6t7u8v9-w0x1-y2z3-a4b5-c6d7e8f9g0h1i",
     "filename": "坐在宝座上圣洁羔羊",
     "index": 49,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "坐在宝座上圣洁羔羊",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "t7u8v9w0-x1y2-z3a4-b5c6-d7e8f9g0h1i2j",
     "filename": "谁能使我与神的爱隔绝",
     "index": 50,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "谁能使我与神的爱隔绝",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "u8v9w0x1-y2z3-a4b5-c6d7-e8f9g0h1i2j3k",
     "filename": "是为了爱",
     "index": 51,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "是为了爱",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "v9w0x1y2-z3a4-b5c6-d7e8-f9g0h1i2j3k4l",
     "filename": "能不能",
     "index": 52,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "能不能",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "w0x1y2z3-a4b5-c6d7-e8f9-g0h1i2j3k4l5m",
@@ -320,13 +684,15 @@
     "detail": {
       "title": "一道江河",
       "audio": "一道江河.mp3",
-      "lyrics": "主的爱，像一道江河，宝座能力流到万民。\n祂是光，照耀我的生命，敬拜主，高举祂的圣名。\n主的灵，如风吹我心，安慰忧伤、破碎的灵。\n祂是王，掌管我的心灵，亲爱主，愿祢从天降临。\n一道江河，流呀流呀流到丰盛的生命，\n颂赞奇妙、荣耀的圣名。\n我灵歌唱，唱呀唱呀唱到灵里都欢欣，\n主圣灵现在来掌权运行。",
+      "lyrics": "主的爱，像一道江河\n宝座能力流到万民\n祂是光，照耀我的生命\n敬拜主，高举祂的圣名\n\n主的灵，如风吹我心\n安慰忧伤、破碎的灵\n祂是王，掌管我的心灵\n亲爱主，愿祢从天降临。\n\n一道江河，流呀流呀流到丰盛的生命\n颂赞奇妙、荣耀的圣名\n我灵歌唱，唱呀唱呀唱到灵里都欢欣\n主圣灵现在来掌权运行",
       "events": [
         {
           "name": "永顺堂献唱",
           "date": "2025-06-29",
           "description": "青年团契6月份永顺堂主日献唱",
-          "videos": ["一道江河_20250629.mp4"]
+          "videos": [
+            "一道江河_20250629.mp4"
+          ]
         }
       ]
     }
@@ -335,342 +701,741 @@
     "id": "x1y2z3a4-b5c6-d7e8-f9g0-h1i2j3k4l5m6n",
     "filename": "生命的河",
     "index": 54,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "生命的河",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "y2z3a4b5-c6d7-e8f9-g0h1-i2j3k4l5m6n7o",
     "filename": "希望之星",
     "index": 55,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "希望之星",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "z3a4b5c6-d7e8-f9g0-h1i2-j3k4l5m6n7o8p",
     "filename": "这是一支赞美的军队",
     "index": 56,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "这是一支赞美的军队",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "a4b5c6d7-e8f9-g0h1-i2j3-k4l5m6n7o8p9q",
     "filename": "赞美中信心不断升起",
     "index": 57,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "赞美中信心不断升起",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "b5c6d7e8-f9g0-h1i2-j3k4-l5m6n7o8p9q0r",
     "filename": "使命",
     "index": 58,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "使命",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "c6d7e8f9-g0h1-i2j3-k4l5-m6n7o8p9q0r1s",
     "filename": "你是我永远的救主",
     "index": 59,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "你是我永远的救主",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "d7e8f9g0-h1i2-j3k4-l5m6-n7o8p9q0r1s2t",
     "filename": "你是大洪水中的方舟",
     "index": 60,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "你是大洪水中的方舟",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "e8f9g0h1-i2j3-k4l5-m6n7-o8p9q0r1s2t3u",
     "filename": "信实的神",
     "index": 61,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "信实的神",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "f9g0h1i2-j3k4-l5m6-n7o8-p9q0r1s2t3u4v",
     "filename": "只要相信",
     "index": 62,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "只要相信",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "g0h1i2j3-k4l5-m6n7-o8p9-q0r1s2t3u4v5w",
     "filename": "唯有你",
     "index": 63,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "唯有你",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "h1i2j3k4-l5m6-n7o8-p9q0-r1s2t3u4v5w6x",
     "filename": "凡事都有神的美意",
     "index": 64,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "凡事都有神的美意",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "i2j3k4l5-m6n7-o8p9-q0r1-s2t3u4v5w6x7y",
     "filename": "耶稣基督是主",
     "index": 65,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "耶稣基督是主",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "j3k4l5m6-n7o8-p9q0-r1s2-t3u4v5w6x7y8z",
     "filename": "超越万物的爱",
     "index": 66,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "超越万物的爱",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "k4l5m6n7-o8p9-q0r1-s2t3-u4v5w6x7y8z9a",
     "filename": "荣耀的呼召",
     "index": 67,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "荣耀的呼召",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "l5m6n7o8-p9q0-r1s2-t3u4-v5w6x7y8z9a0b",
     "filename": "只愿得着你",
     "index": 68,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "只愿得着你",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "m6n7o8p9-q0r1-s2t3-u4v5-w6x7y8z9a0b1c",
     "filename": "我的生命献给你",
     "index": 69,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "我的生命献给你",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "n7o8p9q0-r1s2-t3u4-v5w6-x7y8z9a0b1c2d",
     "filename": "活祭",
     "index": 70,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "活祭",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "o8p9q0r1-s2t3-u4v5-w6x7-y8z9a0b1c2d3e",
     "filename": "十字架的传达者",
     "index": 71,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "十字架的传达者",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "p9q0r1s2-t3u4-v5w6-x7y8-z9a0b1c2d3e4f",
     "filename": "你是唯一",
     "index": 72,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "你是唯一",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "q0r1s2t3-u4v5-w6x7-y8z9-a0b1c2d3e4f5g",
     "filename": "在这里",
     "index": 73,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "在这里",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "r1s2t3u4-v5w6-x7y8-z9a0-b1c2d3e4f5g6h",
     "filename": "掌上明珠",
     "index": 74,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "掌上明珠",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "s2t3u4v5-w6x7-y8z9-a0b1-c2d3e4f5g6h7i",
     "filename": "主，恳求你",
     "index": 75,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "主，恳求你",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "t3u4v5w6-x7y8-z9a0-b1c2-d3e4f5g6h7i8j",
     "filename": "生命的执着",
     "index": 76,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "生命的执着",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "u4v5w6x7-y8z9-a0b1-c2d3-e4f5g6h7i8j9k",
     "filename": "一生爱你",
     "index": 77,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "一生爱你",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "v5w6x7y8-z9a0-b1c2-d3e4-f5g6h7i8j9k0l",
     "filename": "来吧，我们赞美",
     "index": 78,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "来吧，我们赞美",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "w6x7y8z9-a0b1-c2d3-e4f5-g6h7i8j9k0l1m",
     "filename": "神羔羊配得",
     "index": 79,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "神羔羊配得",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "x7y8z9a0-b1c2-d3e4-f5g6-h7i8j9k0l1m2n",
     "filename": "神羔羊是万王之王",
     "index": 80,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "神羔羊是万王之王",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "y8z9a0b1-c2d3-e4f5-g6h7-i8j9k0l1m2n3o",
     "filename": "我们爱让世界不一样",
     "index": 81,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "我们爱让世界不一样",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "z9a0b1c2-d3e4-f5g6-h7i8-j9k0l1m2n3o4p",
     "filename": "大声敬拜",
     "index": 82,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "大声敬拜",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "a0b1c2d3-e4f5-g6h7-i8j9-k0l1m2n3o4p5q",
     "filename": "你若相信",
     "index": 83,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "你若相信",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "b1c2d3e4-f5g6-h7i8-j9k0-l1m2n3o4p5q6r",
     "filename": "差遣我",
     "index": 84,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "差遣我",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "c2d3e4f5-g6h7-i8j9-k0l1-m2n3o4p5q6r7s",
     "filename": "恩上加恩",
     "index": 85,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "恩上加恩",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "d3e4f5g6-h7i8-j9k0-l1m2-n3o4p5q6r7s8t",
     "filename": "得胜哈利路亚",
     "index": 86,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "得胜哈利路亚",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "e4f5g6h7-i8j9-k0l1-m2n3-o4p5q6r7s8t9u",
     "filename": "常常喜乐",
     "index": 87,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "常常喜乐",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "f5g6h7i8-j9k0-l1m2-n3o4-p5q6r7s8t9u0v",
     "filename": "基督全副军装",
     "index": 88,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "基督全副军装",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "g6h7i8j9-k0l1-m2n3-o4p5-q6r7s8t9u0v1w",
     "filename": "将天敞开",
     "index": 89,
-    "type": "png"
+    "type": "png",
+    "tag": "",
+    "detail": {
+      "title": "将天敞开",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "h7i8j9k0-l1m2-n3o4-p5q6-r7s8t9u0v1w2x",
     "filename": "我能给你什么",
     "index": 90,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "我能给你什么",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "i8j9k0l1-m2n3-o4p5-q6r7-s8t9u0v1w2x3y",
     "filename": "兴起为主站立",
     "index": 91,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "兴起为主站立",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "j9k0l1m2-n3o4-p5q6-r7s8-t9u0v1w2x3y4z",
     "filename": "争战在于你",
     "index": 92,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "争战在于你",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "k0l1m2n3-o4p5-q6r7-s8t9-u0v1w2x3y4z5a",
     "filename": "心的归回",
     "index": 93,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "心的归回",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "l1m2n3o4-p5q6-r7s8-t9u0-v1w2x3y4z5a6b",
     "filename": "恩曲不休",
     "index": 94,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "恩曲不休",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "m2n3o4p5-q6r7-s8t9-u0v1-w2x3y4z5a6b7c",
     "filename": "全颂赞",
     "index": 95,
-    "type": "png"
+    "type": "png",
+    "tag": "",
+    "detail": {
+      "title": "全颂赞",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "n3o4p5q6-r7s8-t9u0-v1w2-x3y4z5a6b7c8d",
     "filename": "生命的更新",
     "index": 96,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "生命的更新",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "o4p5q6r7-s8t9-u0v1-w2x3-y4z5a6b7c8d9e",
     "filename": "耶和华祝福满满",
     "index": 97,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "耶和华祝福满满",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "p5q6r7s8-t9u0-v1w2-x3y4-z5a6b7c8d9e0f",
     "filename": "盟约",
     "index": 98,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "盟约",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "q6r7s8t9-u0v1-w2x3-y4z5-a6b7c8d9e0f1g",
     "filename": "唯一的爱慕",
     "index": 99,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "唯一的爱慕",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "r7s8t9u0-v1w2-x3y4-z5a6-b7c8d9e0f1g2h",
     "filename": "专心仰望耶稣",
     "index": 100,
-    "type": "png"
+    "type": "png",
+    "tag": "",
+    "detail": {
+      "title": "专心仰望耶稣",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "s8t9u0v1-w2x3-y4z5-a6b7-c8d9e0f1g2h3i",
     "filename": "安静",
     "index": 101,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "安静",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "t9u0v1w2-x3y4-z5a6-b7c8-d9e0f1g2h3i4j",
     "filename": "你爱永不变",
     "index": 102,
-    "type": "png"
+    "type": "png",
+    "tag": "",
+    "detail": {
+      "title": "你爱永不变",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "u0v1w2x3-y4z5-a6b7-c8d9-e0f1g2h3i4j5k",
     "filename": "求圣灵运行",
     "index": 103,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "求圣灵运行",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "v1w2x3y4-z5a6-b7c8-d9e0-f1g2h3i4j5k6l",
     "filename": "十架的救赎",
     "index": 104,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "十架的救赎",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "w2x3y4z5-a6b7-c8d9-e0f1-g2h3i4j5k6l7m",
     "filename": "别无他名",
     "index": 105,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "别无他名",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "x3y4z5a6-b7c8-d9e0-f1g2-h3i4j5k6l7m8n",
     "filename": "因着十架爱",
     "index": 106,
-    "type": "jpeg"
+    "type": "jpeg",
+    "tag": "",
+    "detail": {
+      "title": "因着十架爱",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "y4z5a6b7-c8d9-e0f1-g2h3-i4j5k6l7m8n9o",
     "filename": "合一相爱",
     "index": 107,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "合一相爱",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "z5a6b7c8-d9e0-f1g2-h3i4-j5k6l7m8n9o0p",
     "filename": "脚步",
     "index": 108,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "脚步",
+      "audio": "",
+      "lyrics": "",
+      "events": []
+    }
   },
   {
     "id": "a6b7c8d9-e0f1-g2h3-i4j5-k6l7m8n9o0p1q",
     "filename": "你坐着为王",
     "index": 109,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "你坐着为王",
+      "audio": "",
+      "lyrics": "主耶和华，满有怜悯和恩典\n我投靠在你翅膀荫下\n当我回转，一宿虽然有哭泣\n早晨必欢呼喜乐\n\n你坐着为王，到永永远远\n虽洪水翻腾，我坚定仰望你\n你坐着为王，垂听我呼求\n使我灵苏醒，有复活的生命",
+      "events": []
+    }
   },
   {
     "id": "b7c8d9e0-f1g2-h3i4-j5k6-l7m8n9o0p1q2r",
     "filename": "我要一生一世住在你圣殿",
     "index": 110,
-    "type": "jpg"
+    "type": "jpg",
+    "tag": "",
+    "detail": {
+      "title": "我要一生一世住在你圣殿",
+      "audio": "",
+      "lyrics": "主，你是我亮光\n是我生命的保障\n主，你是尊贵，你是可畏，是我的高台\n主，你是我牧者\n是我生命的安慰\n主，你是拯救，你是宽恕，是我的盾牌\n\n抬头吧！别再被劳役\n降服吧！瞎眼都可看见\n从压制里，获释放，你国要彰显\n\n我要一生一世住在你圣殿\n我要一心一意寻求你面\n我要不惜一切，顺服你训示\n尽情地献上作活祭",
+      "events": []
+    }
   }
 ]

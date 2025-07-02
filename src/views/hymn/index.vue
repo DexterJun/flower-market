@@ -63,17 +63,6 @@
       </div>
     </div>
   </div>
-
-  <!-- 图片预览组件 -->
-  <Teleport to="body">
-    <div v-if="previewVisible" class="image-preview" :class="{ visible: previewVisible }" @click="closePreview">
-      <div class="preview-content" :class="{ visible: previewVisible }">
-        <img :src="currentPreviewImage" :alt="currentPreviewItem?.filename" @click.stop />
-        <div class="preview-title">{{ currentPreviewItem?.filename }}</div>
-        <button class="close-button" @click="closePreview">×</button>
-      </div>
-    </div>
-  </Teleport>
 </template>
 
 <script setup lang="ts">
@@ -264,11 +253,6 @@ const filteredHymnList = computed(() => {
 });
 
 const windowWidth = ref(window.innerWidth);
-const previewVisible = ref(false);
-const currentPreviewItem = ref<HymnItem | null>(null);
-const currentPreviewImage = computed(() =>
-  currentPreviewItem.value ? currentPreviewItem.value.url : ''
-);
 
 // 计算列宽
 const columnWidth = computed(() => {
@@ -301,40 +285,14 @@ const onImageLoad = () => {
   // 瀑布流会自动处理重排
 };
 
-// 处理图片点击
+// 处理图片点击 - 直接跳转到详情页面
 const handleItemClick = (item: HymnItem) => {
-  // 如果有tag，跳转到详情页面
-  if (item.tag && item.tag.trim()) {
-    router.push({
-      name: 'HymnDetail',
-      query: {
-        id: item.id
-      }
-    });
-  } else {
-    // 如果没有tag，保持原有的预览逻辑
-    openPreview(item);
-  }
-};
-
-// 打开预览
-const openPreview = (item: HymnItem) => {
-  currentPreviewItem.value = item;
-  previewVisible.value = true;
-  document.body.style.overflow = 'hidden'; // 防止背景滚动
-};
-
-// 关闭预览
-const closePreview = () => {
-  previewVisible.value = false;
-  document.body.style.overflow = ''; // 恢复背景滚动
-};
-
-// 键盘事件处理
-const handleKeyDown = (e: KeyboardEvent) => {
-  if (e.key === 'Escape' && previewVisible.value) {
-    closePreview();
-  }
+  router.push({
+    name: 'HymnDetail',
+    query: {
+      id: item.id
+    }
+  });
 };
 
 // 抽屉状态
@@ -384,7 +342,6 @@ const loadMoreData = async () => {
 
 onMounted(() => {
   window.addEventListener('resize', handleResize);
-  window.addEventListener('keydown', handleKeyDown);
   window.addEventListener('scroll', handleScroll);
   loadHymnList(true);
   loadCatalog();
@@ -392,7 +349,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
-  window.removeEventListener('keydown', handleKeyDown);
   window.removeEventListener('scroll', handleScroll);
   if (searchTimeout.value) {
     clearTimeout(searchTimeout.value);
@@ -546,83 +502,6 @@ onUnmounted(() => {
   transform: translateY(-2px);
 }
 
-/* 图片预览样式 */
-.image-preview {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.95);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: opacity, visibility;
-}
-
-.image-preview.visible {
-  opacity: 1;
-  visibility: visible;
-}
-
-.preview-content {
-  position: relative;
-  max-width: 90vw;
-  max-height: 90vh;
-  transform: scale(0.95);
-  opacity: 0;
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  will-change: transform, opacity;
-}
-
-.preview-content.visible {
-  transform: scale(1);
-  opacity: 1;
-}
-
-.preview-content img {
-  max-width: 100%;
-  max-height: 90vh;
-  object-fit: contain;
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-}
-
-.preview-title {
-  position: absolute;
-  bottom: -40px;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  color: #fff;
-  padding: 10px;
-  font-size: 16px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.close-button {
-  position: absolute;
-  top: -40px;
-  right: -40px;
-  color: #fff;
-  background: none;
-  border: none;
-  font-size: 32px;
-  cursor: pointer;
-  padding: 8px;
-  transition: var(--transition-fast);
-  opacity: 0.8;
-}
-
-.close-button:hover {
-  opacity: 1;
-  transform: scale(1.1);
-}
-
 /* 移动端适配 */
 @media screen and (max-width: 768px) {
   .search-container {
@@ -651,20 +530,6 @@ onUnmounted(() => {
     font-size: 16px;
     -webkit-appearance: none;
     appearance: none;
-  }
-
-  .preview-content {
-    max-width: 95vw;
-  }
-
-  .close-button {
-    top: -50px;
-    right: 0;
-  }
-
-  .preview-title {
-    bottom: -50px;
-    font-size: 14px;
   }
 }
 
