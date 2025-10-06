@@ -1,10 +1,4 @@
 {
-  "functions": {
-    "api/**/*.js": {
-      "runtime": "nodejs20.x",
-      "includeFiles": "api/**/*.json"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/meetingData/topicList.json",
