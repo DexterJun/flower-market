@@ -27,4 +27,15 @@
   min-height: 100vh;
   padding-bottom: env(safe-area-inset-bottom);
 }
+
+/* 全局触控优化 */
+html,
+body {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  -webkit-user-drag: none;
+}
 </style>

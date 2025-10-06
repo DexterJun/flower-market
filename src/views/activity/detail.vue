@@ -38,14 +38,8 @@
         </div>
       </div>
 
-      <!-- 全屏图片预览 -->
-      <div v-if="showViewer" class="viewer" @click.self="closeViewer">
-        <button class="viewer-close" @click="closeViewer">×</button>
-        <button v-if="images.length > 1" class="viewer-nav prev" @click.stop="prevImage">‹</button>
-        <img :src="currentImage" class="viewer-image" alt="preview" />
-        <button v-if="images.length > 1" class="viewer-nav next" @click.stop="nextImage">›</button>
-        <div class="viewer-indicator">{{ currentIndex + 1 }} / {{ images.length }}</div>
-      </div>
+      <!-- 全屏图片预览：替换为通用组件（支持双指缩放、下拉关闭、左右滑动） -->
+      <MobileImageViewer v-model="showViewer" :images="images" :start-index="currentIndex" @change="onIndexChange" />
     </div>
   </div>
 </template>
@@ -53,6 +47,8 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
+// @ts-ignore
+import MobileImageViewer from '@/components/MobileImageViewer.vue'
 
 type ActivityDetail = {
   id: string
@@ -83,6 +79,7 @@ const openViewer = (idx: number) => {
 const closeViewer = () => { showViewer.value = false }
 const prevImage = () => { if (images.value.length) currentIndex.value = (currentIndex.value - 1 + images.value.length) % images.value.length }
 const nextImage = () => { if (images.value.length) currentIndex.value = (currentIndex.value + 1) % images.value.length }
+const onIndexChange = (i: number) => { currentIndex.value = i }
 
 const onKeydown = (e: KeyboardEvent) => {
   if (!showViewer.value) return

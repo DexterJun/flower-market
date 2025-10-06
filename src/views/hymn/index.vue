@@ -14,7 +14,8 @@
       <masonry-wall :items="filteredHymnList" :column-width="columnWidth" :gap="10" :rtl="false">
         <template #default="{ item }">
           <div class="image-card">
-            <img :src="item.url" :alt="item.filename" @load="onImageLoad" @click="handleItemClick(item)" />
+            <img :src="item.url" :alt="item.filename" loading="lazy" decoding="async" @load="onImageLoad"
+              @click="handleItemClick(item)" />
             <div class="image-title">{{ item.filename }}</div>
           </div>
         </template>
@@ -60,17 +61,14 @@
       </div>
     </div>
   </div>
-  <!-- 全屏查看 -->
-  <div v-if="isFullscreen && activeItem" class="fullscreen-overlay" @click="closeFullscreen">
-    <div class="fullscreen-content" @click.stop>
-      <button class="fullscreen-close" @click="closeFullscreen">关闭</button>
-      <img :src="activeItem.url" :alt="activeItem.filename" class="fullscreen-image" />
-    </div>
-  </div>
+  <!-- 全屏查看：改用通用移动端图片预览组件 -->
+  <MobileImageViewer v-model="isFullscreen" :images="activeItem ? [activeItem.url] : []" :start-index="0" />
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
+// @ts-ignore
+import MobileImageViewer from '@/components/MobileImageViewer.vue'
 // 路由不再用于详情跳转
 // @ts-ignore
 import MasonryWall from '@/components/masonry-wall.vue';
