@@ -5,11 +5,7 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      name: "Home",
-      component: () => import("@/views/flowers/index.vue"),
-      meta: {
-        title: "898 花卉市场",
-      },
+      redirect: "/hymn",
     },
     {
       path: "/hymn",
@@ -20,11 +16,19 @@ const router = createRouter({
       },
     },
     {
-      path: "/hymn/detail",
-      name: "HymnDetail",
-      component: () => import("@/views/hymn/detailPage.vue"),
+      path: "/activity",
+      name: "Activity",
+      component: () => import("@/views/activity/index.vue"),
       meta: {
-        title: "青年团契诗歌集",
+        title: "活动",
+      },
+    },
+    {
+      path: "/gathering",
+      name: "Gathering",
+      component: () => import("@/views/gathering/index.vue"),
+      meta: {
+        title: "聚会信息",
       },
     },
   ],
@@ -38,4 +42,3 @@ router.beforeEach((to, from, next) => {
 });
 
 export default router;
- 

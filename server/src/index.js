@@ -26,8 +26,7 @@ const {
   healthHandler,
   getContentHandler,
   getImagesHandler,
-  searchImagesHandler,
-  getHymnDetailHandler
+  searchImagesHandler
 } = require('../../lib/handlers');
 const { createExpressHandler, corsMiddleware } = require('../../lib/express-adapter');
 
@@ -42,7 +41,7 @@ app.get('/api/health', createExpressHandler(healthHandler));
 app.get('/api/getContent', createExpressHandler(getContentHandler));
 app.get('/api/images', createExpressHandler(getImagesHandler));
 app.get('/api/search', createExpressHandler(searchImagesHandler));
-app.get('/api/hymn/detail/:id', createExpressHandler(getHymnDetailHandler));
+// 详情接口已移除
 
 // 根路径
 app.get('/', (req, res) => {
@@ -54,8 +53,7 @@ app.get('/', (req, res) => {
       'GET /api/health - 健康检查',
       'GET /api/getContent - 获取目录内容',
       'GET /api/images - 获取图片列表',
-      'GET /api/search - 搜索图片',
-      'GET /api/hymn/detail/:id - 获取诗歌详情'
+      'GET /api/search - 搜索图片'
     ]
   });
 });

@@ -16,9 +16,6 @@
           <div class="image-card">
             <img :src="item.url" :alt="item.filename" @load="onImageLoad" @click="handleItemClick(item)" />
             <div class="image-title">{{ item.filename }}</div>
-            <div v-if="item.tag && item.tag.trim()" class="image-ribbon">
-              <span class="ribbon-text">{{ item.tag }}</span>
-            </div>
           </div>
         </template>
       </masonry-wall>
@@ -63,11 +60,18 @@
       </div>
     </div>
   </div>
+  <!-- 全屏查看 -->
+  <div v-if="isFullscreen && activeItem" class="fullscreen-overlay" @click="closeFullscreen">
+    <div class="fullscreen-content" @click.stop>
+      <button class="fullscreen-close" @click="closeFullscreen">关闭</button>
+      <img :src="activeItem.url" :alt="activeItem.filename" class="fullscreen-image" />
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
-import { useRouter } from 'vue-router';
+// 路由不再用于详情跳转
 // @ts-ignore
 import MasonryWall from '@/components/masonry-wall.vue';
 // @ts-ignore
@@ -79,7 +83,6 @@ interface HymnItem {
   url: string;
   lastModified: string;
   size: number;
-  tag?: string;
 }
 
 interface PaginationInfo {
@@ -90,8 +93,7 @@ interface PaginationInfo {
   nextMarker: string | null;
 }
 
-// 路由
-const router = useRouter();
+// 不再使用路由跳转详情
 
 // 搜索相关
 const searchQuery = ref('');
@@ -285,14 +287,23 @@ const onImageLoad = () => {
   // 瀑布流会自动处理重排
 };
 
-// 处理图片点击 - 直接跳转到详情页面
+// 全屏查看状态
+const isFullscreen = ref(false);
+const activeItem = ref<HymnItem | null>(null);
+
+// 处理图片点击 - 列表内全屏展示
 const handleItemClick = (item: HymnItem) => {
-  router.push({
-    name: 'HymnDetail',
-    query: {
-      id: item.id
-    }
-  });
+  activeItem.value = item;
+  isFullscreen.value = true;
+  // 更新页面标题为文件名
+  if (item.filename) {
+    document.title = item.filename;
+  }
+};
+
+const closeFullscreen = () => {
+  isFullscreen.value = false;
+  activeItem.value = null;
 };
 
 // 抽屉状态
@@ -815,93 +826,38 @@ onUnmounted(() => {
   }
 }
 
-/* 丝带标签样式 */
-.image-ribbon {
-  position: absolute;
-  top: 12px;
-  right: -15px;
-  background: linear-gradient(45deg, var(--primary-color) 0%, #357abd 100%);
-  color: white;
-  padding: 6px 18px 6px 20px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  transform: rotate(45deg);
-  transform-origin: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  z-index: 10;
-  min-width: 70px;
-  text-align: center;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+/* 全屏查看样式 */
+.fullscreen-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 
-.image-ribbon::before {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 0;
-  border-left: 4px solid #2c5aa0;
-  border-bottom: 4px solid transparent;
+.fullscreen-content {
+  position: relative;
+  max-width: 96vw;
+  max-height: 96vh;
 }
 
-.image-ribbon::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  right: 0;
-  width: 0;
-  height: 0;
-  border-right: 4px solid #2c5aa0;
-  border-bottom: 4px solid transparent;
-}
-
-.ribbon-text {
+.fullscreen-image {
+  max-width: 100%;
+  max-height: 100%;
   display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 90px;
 }
 
-.image-card:hover .image-ribbon {
-  transform: rotate(45deg);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-/* 移动端丝带适配 */
-@media screen and (max-width: 768px) {
-  .image-ribbon {
-    top: 10px;
-    right: -12px;
-    padding: 3px 12px 3px 14px;
-    font-size: 8px;
-    min-width: 50px;
-    transform: rotate(45deg);
-    transform-origin: center;
-    letter-spacing: 0.3px;
-  }
-
-  .ribbon-text {
-    max-width: 55px;
-  }
-}
-
-/* 超小屏幕丝带适配 */
-@media screen and (max-width: 480px) {
-  .image-ribbon {
-    top: 8px;
-    right: -10px;
-    padding: 2px 10px 2px 12px;
-    font-size: 7px;
-    min-width: 45px;
-    letter-spacing: 0.2px;
-  }
-
-  .ribbon-text {
-    max-width: 45px;
-  }
+.fullscreen-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
 }
 </style>
