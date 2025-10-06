@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/api/meetingData/topicList.json",
-      "destination": "/api/meetingData/topicList"
+      "destination": "/api/meetingData/topicListApi"
     },
     {
       "source": "/api/meetingData/topicDetail.json",
-      "destination": "/api/meetingData/topicDetail"
+      "destination": "/api/meetingData/topicDetailApi"
     },
     {
       "source": "/api/(.*)",
