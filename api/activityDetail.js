@@ -3,4 +3,9 @@ const { createVercelHandler } = require('../lib/vercel-adapter');
 
 module.exports = createVercelHandler(getActivityDetailHandler);
 
+module.exports.config = {
+  runtime: 'nodejs20.x',
+  includeFiles: ['api/activityData/*.json']
+};
+
 
