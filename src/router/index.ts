@@ -24,6 +24,14 @@ const router = createRouter({
       },
     },
     {
+      path: "/activity/:id",
+      name: "ActivityDetail",
+      component: () => import("@/views/activity/detail.vue"),
+      meta: {
+        title: "活动详情",
+      },
+    },
+    {
       path: "/gathering",
       name: "Gathering",
       component: () => import("@/views/gathering/index.vue"),

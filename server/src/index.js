@@ -26,7 +26,9 @@ const {
   healthHandler,
   getContentHandler,
   getImagesHandler,
-  searchImagesHandler
+  searchImagesHandler,
+  getActivityListHandler,
+  getActivityDetailHandler
 } = require('../../lib/handlers');
 const { createExpressHandler, corsMiddleware } = require('../../lib/express-adapter');
 
@@ -41,6 +43,13 @@ app.get('/api/health', createExpressHandler(healthHandler));
 app.get('/api/getContent', createExpressHandler(getContentHandler));
 app.get('/api/images', createExpressHandler(getImagesHandler));
 app.get('/api/search', createExpressHandler(searchImagesHandler));
+app.get('/api/activityList', createExpressHandler(getActivityListHandler));
+app.get('/api/activityDetail', createExpressHandler(getActivityDetailHandler));
+
+// 开发环境：托管根项目下的 api 目录中的静态数据文件（如 meetingData/*.json）
+// 放在动态路由之后，避免覆盖现有动态接口
+const staticApiDir = path.join(__dirname, '..', '..', 'api');
+app.use('/api', express.static(staticApiDir));
 // 详情接口已移除
 
 // 根路径
