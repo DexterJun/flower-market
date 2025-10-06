@@ -368,10 +368,13 @@ onUnmounted(() => {
 <style>
 :root {
   --primary-color: #4a90e2;
+  --accent-color: #ff8a65;
+  --accent-color-2: #6bcb77;
   --shadow-color: rgba(0, 0, 0, 0.08);
   --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   --transition-slow: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --soft-gradient: linear-gradient(180deg, #f0f5ff 0%, #fdf7f2 100%);
 }
 </style>
 
@@ -380,7 +383,7 @@ onUnmounted(() => {
   width: 100%;
   min-height: 100vh;
   box-sizing: border-box;
-  background-color: #f8f9fa;
+  background: var(--soft-gradient);
 }
 
 .search-container {
@@ -407,7 +410,7 @@ onUnmounted(() => {
 
 .search-input {
   flex: 1;
-  padding: 10px 35px 10px 15px;
+  padding: 10px 40px 10px 40px;
   border: 2px solid #eef2f7;
   border-radius: 12px;
   font-size: 16px;
@@ -417,6 +420,10 @@ onUnmounted(() => {
   color: #2c3e50;
   -webkit-text-size-adjust: 100%;
   touch-action: manipulation;
+  background-repeat: no-repeat;
+  background-size: 18px 18px;
+  background-position: 12px center;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2399A3B3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><line x1='21' y1='21' x2='16.65' y2='16.65'/></svg>");
 }
 
 .search-input:focus {
@@ -463,7 +470,7 @@ onUnmounted(() => {
 
 .image-card {
   position: relative;
-  background: #fff;
+  background: linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, rgba(74, 144, 226, 0.35), rgba(107, 203, 119, 0.35)) border-box;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 4px 12px var(--shadow-color);
@@ -472,6 +479,18 @@ onUnmounted(() => {
   transform: translateY(0);
   will-change: transform, box-shadow;
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid transparent;
+}
+
+.image-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(140px 60px at 50% 0%, rgba(74, 144, 226, 0.18), rgba(255, 138, 101, 0.12) 40%, rgba(107, 203, 119, 0) 70%);
+  filter: blur(0.5px);
+  z-index: 1;
+  pointer-events: none;
 }
 
 .image-card:hover {
@@ -488,6 +507,8 @@ onUnmounted(() => {
   transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   backface-visibility: hidden;
   -webkit-font-smoothing: subpixel-antialiased;
+  position: relative;
+  z-index: 2;
 }
 
 .image-card:hover img {
@@ -505,6 +526,9 @@ onUnmounted(() => {
   font-weight: 500;
   transform: translateY(0);
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(249, 250, 251, 1) 100%);
+  position: relative;
+  z-index: 3;
 }
 
 .image-card:hover .image-title {
@@ -539,6 +563,7 @@ onUnmounted(() => {
     font-size: 16px;
     -webkit-appearance: none;
     appearance: none;
+    padding-left: 40px;
   }
 }
 
@@ -569,10 +594,10 @@ onUnmounted(() => {
 
 .menu-button {
   position: relative;
-  background: none;
+  background: linear-gradient(135deg, rgba(74, 144, 226, 0.12), rgba(255, 138, 101, 0.12));
   border: none;
   cursor: pointer;
-  padding: 8px;
+  padding: 15px 10px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -582,7 +607,7 @@ onUnmounted(() => {
 }
 
 .menu-button:hover {
-  background-color: #f5f7fa;
+  background: linear-gradient(135deg, rgba(74, 144, 226, 0.18), rgba(255, 138, 101, 0.18));
 }
 
 .menu-icon {
@@ -662,6 +687,7 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: linear-gradient(135deg, rgba(74, 144, 226, 0.08), rgba(255, 138, 101, 0.08));
 }
 
 .drawer-header h2 {
