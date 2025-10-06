@@ -2,15 +2,15 @@
   "functions": {
     "api/activityList.js": {
       "runtime": "nodejs20.x",
-      "includeFiles": ["api/activityData/*.json"]
+      "includeFiles": "api/activityData/*.json"
     },
     "api/activityDetail.js": {
       "runtime": "nodejs20.x",
-      "includeFiles": ["api/activityData/*.json"]
+      "includeFiles": "api/activityData/*.json"
     },
     "api/meetingData/*.js": {
       "runtime": "nodejs20.x",
-      "includeFiles": ["api/meetingData/*.json"]
+      "includeFiles": "api/meetingData/*.json"
     }
   },
   "rewrites": [
