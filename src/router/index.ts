@@ -31,6 +31,14 @@ const router = createRouter({
         title: "聚会信息",
       },
     },
+    {
+      path: "/gathering/:id",
+      name: "GatheringDetail",
+      component: () => import("@/views/gathering/detail.vue"),
+      meta: {
+        title: "聚会详情",
+      },
+    },
   ],
 });
 
