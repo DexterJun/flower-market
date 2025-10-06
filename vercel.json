@@ -1,5 +1,19 @@
 {
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "nodejs18.x",
+      "includeFiles": "api/**/*.json"
+    }
+  },
   "rewrites": [
+    {
+      "source": "/api/meetingData/topicList.json",
+      "destination": "/api/meetingData/topicList"
+    },
+    {
+      "source": "/api/meetingData/topicDetail.json",
+      "destination": "/api/meetingData/topicDetail"
+    },
     {
       "source": "/api/(.*)",
       "destination": "/api/$1"
