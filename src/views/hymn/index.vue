@@ -293,10 +293,6 @@ const activeItem = ref<HymnItem | null>(null);
 const handleItemClick = (item: HymnItem) => {
   activeItem.value = item;
   isFullscreen.value = true;
-  // 更新页面标题为文件名
-  if (item.filename) {
-    document.title = item.filename;
-  }
 };
 
 const closeFullscreen = () => {

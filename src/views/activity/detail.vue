@@ -70,22 +70,17 @@ const videos = computed(() => (detail.value?.video ?? []))
 // 图片预览
 const showViewer = ref(false)
 const currentIndex = ref(0)
-const currentImage = computed(() => images.value[currentIndex.value])
 
 const openViewer = (idx: number) => {
   currentIndex.value = idx
   showViewer.value = true
 }
 const closeViewer = () => { showViewer.value = false }
-const prevImage = () => { if (images.value.length) currentIndex.value = (currentIndex.value - 1 + images.value.length) % images.value.length }
-const nextImage = () => { if (images.value.length) currentIndex.value = (currentIndex.value + 1) % images.value.length }
 const onIndexChange = (i: number) => { currentIndex.value = i }
 
 const onKeydown = (e: KeyboardEvent) => {
   if (!showViewer.value) return
   if (e.key === 'Escape') closeViewer()
-  if (e.key === 'ArrowLeft') prevImage()
-  if (e.key === 'ArrowRight') nextImage()
 }
 
 onMounted(async () => {
@@ -311,42 +306,5 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', onKeydown) })
   line-height: 34px;
   text-align: center;
   cursor: pointer;
-}
-
-.viewer-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, .15);
-  border: 1px solid rgba(255, 255, 255, .35);
-  color: #fff;
-  font-size: 26px;
-  line-height: 38px;
-  text-align: center;
-  cursor: pointer;
-}
-
-.viewer-nav.prev {
-  left: 12px;
-}
-
-.viewer-nav.next {
-  right: 12px;
-}
-
-.viewer-indicator {
-  position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #fff;
-  font-size: 12px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, .15);
-  border: 1px solid rgba(255, 255, 255, .35);
 }
 </style>

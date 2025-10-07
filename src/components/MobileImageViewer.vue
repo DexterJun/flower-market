@@ -2,22 +2,12 @@
   <div v-if="show" class="miv-overlay" @click.self="handleBackdropClick">
     <button class="miv-close" @click="emitClose">×</button>
     <div class="miv-stage" ref="stageRef">
-      <div class="miv-track" :style="trackStyle" v-show="images.length > 1">
-        <div v-for="(src, i) in images" :key="i" class="miv-slide" :style="{ width: `${viewportWidth}px` }">
-          <img :src="src" class="miv-image" :style="imageStyle(i)" draggable="false" @touchstart.passive="onTouchStart"
-            @touchmove.prevent="onTouchMove" @touchend="onTouchEnd" @touchcancel="onTouchEnd" />
-        </div>
-      </div>
-
-      <div v-show="images.length <= 1" class="miv-single">
-        <img :src="images[0]" class="miv-image" :style="singleImageStyle" draggable="false"
+      <!-- 只显示单张图片，不支持轮播 -->
+      <div class="miv-single">
+        <img :src="currentImage" class="miv-image" :style="singleImageStyle" draggable="false"
           @touchstart.passive="onTouchStart" @touchmove.prevent="onTouchMove" @touchend="onTouchEnd"
           @touchcancel="onTouchEnd" />
       </div>
-
-      <div v-if="images.length > 1" class="miv-indicator">{{ currentIndex + 1 }} / {{ images.length }}</div>
-      <button v-if="images.length > 1" class="miv-nav prev" @click.stop="goPrev">‹</button>
-      <button v-if="images.length > 1" class="miv-nav next" @click.stop="goNext">›</button>
     </div>
   </div>
 </template>
@@ -52,6 +42,12 @@ const currentIndex = ref(props.startIndex)
 watch(() => props.startIndex, v => { if (typeof v === 'number') currentIndex.value = v })
 watch(currentIndex, v => emit('change', v))
 
+// 当前显示的图片
+const currentImage = computed(() => {
+  const images = props.images || []
+  return images[currentIndex.value] || ''
+})
+
 // viewport / stage
 const stageRef = ref<HTMLDivElement | null>(null)
 const viewportWidth = ref<number>(window.innerWidth)
@@ -78,8 +74,6 @@ const pinchStartDistance = ref(0)
 const scale = ref(1)
 const translateX = ref(0)
 const translateY = ref(0)
-
-const trackOffsetX = ref(0) // for slides track translate
 
 const maxScale = 3
 const minScale = 1
@@ -156,16 +150,6 @@ const onTouchEnd = (_e: TouchEvent) => {
     return
   }
 
-  // swipe between images when not zoomed
-  if (scale.value <= 1.02 && images.value.length > 1) {
-    const threshold = viewportWidth.value * 0.18
-    if (translateX.value < -threshold) {
-      goNext()
-    } else if (translateX.value > threshold) {
-      goPrev()
-    }
-  }
-
   // reset transient transforms (for non-zoomed)
   if (scale.value <= 1.02) {
     translateX.value = 0
@@ -184,33 +168,12 @@ const emitClose = () => {
   emit('close')
 }
 
-const goPrev = () => {
-  if (!images.value.length) return
-  currentIndex.value = (currentIndex.value - 1 + images.value.length) % images.value.length
-  resetTransform()
-}
-
-const goNext = () => {
-  if (!images.value.length) return
-  currentIndex.value = (currentIndex.value + 1) % images.value.length
-  resetTransform()
-}
 
 const handleBackdropClick = () => {
   if (props.enableBackdropClose) emitClose()
 }
 
 const images = computed(() => props.images || [])
-
-const trackStyle = computed(() => ({
-  width: `${viewportWidth.value * images.value.length}px`,
-  transform: `translate3d(${-(currentIndex.value * viewportWidth.value) + translateX.value}px, ${translateY.value}px, 0)`,
-}))
-
-const imageStyle = (i: number) => ({
-  transform: `scale(${scale.value})`,
-  transition: isPinching.value ? 'none' : 'transform .2s ease',
-})
 
 const singleImageStyle = computed(() => ({
   transform: `translate3d(${translateX.value}px, ${translateY.value}px, 0) scale(${scale.value})`,
@@ -246,18 +209,6 @@ onUnmounted(() => {
   overflow: hidden;
 }
 
-.miv-track {
-  height: 100%;
-  display: flex;
-  will-change: transform;
-}
-
-.miv-slide {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 .miv-single {
   position: absolute;
@@ -291,43 +242,5 @@ onUnmounted(() => {
   text-align: center;
   cursor: pointer;
   z-index: 2;
-}
-
-.miv-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, .15);
-  border: 1px solid rgba(255, 255, 255, .35);
-  color: #fff;
-  font-size: 26px;
-  line-height: 38px;
-  text-align: center;
-  cursor: pointer;
-  z-index: 2;
-}
-
-.miv-nav.prev {
-  left: 12px;
-}
-
-.miv-nav.next {
-  right: 12px;
-}
-
-.miv-indicator {
-  position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #fff;
-  font-size: 12px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, .15);
-  border: 1px solid rgba(255, 255, 255, .35);
 }
 </style>

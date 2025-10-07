@@ -12,7 +12,7 @@ const router = createRouter({
       name: "Hymn",
       component: () => import("@/views/hymn/index.vue"),
       meta: {
-        title: "青年团契诗歌集",
+        title: "通州堂师主之范团契",
       },
     },
     {
