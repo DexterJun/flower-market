@@ -102,11 +102,18 @@ type TopicDetailBlock = {
   detail: RecordItem[]
 }
 
+type TopicListItem = {
+  id: string
+  topic: string
+  time: string
+}
+
 const route = useRoute()
 const router = useRouter()
 const loading = ref<boolean>(false)
 const records = ref<RecordItem[]>([])
 const activeNames = ref<string | number | (string | number)[]>('')
+const topicList = ref<TopicListItem[]>([])
 
 const goBack = () => router.back()
 
@@ -119,13 +126,35 @@ onMounted(async () => {
   if (!id) return
   try {
     loading.value = true
-    const res = await fetch('/api/meetingData/topicDetail.json')
-    if (!res.ok) throw new Error('network')
-    const data: TopicDetailBlock[] = await res.json()
-    const block = (data || []).find(d => d.topicId === id)
+
+    // 并行获取主题列表和详情数据
+    const [topicListRes, detailRes] = await Promise.all([
+      fetch('/api/meetingData/topicList.json'),
+      fetch('/api/meetingData/topicDetail.json')
+    ])
+
+    if (!topicListRes.ok || !detailRes.ok) throw new Error('network')
+
+    const [topicData, detailData] = await Promise.all([
+      topicListRes.json(),
+      detailRes.json()
+    ])
+
+    topicList.value = Array.isArray(topicData) ? topicData : []
+    const block = (detailData || []).find((d: TopicDetailBlock) => d.topicId === id)
     records.value = block?.detail || []
+
+    // 设置网页标题为本月主题
+    const currentTopic = topicList.value.find(topic => topic.id === id)
+    if (currentTopic) {
+      const title = currentTopic.topic && currentTopic.topic.trim()
+        ? currentTopic.topic
+        : `${currentTopic.time}主题`
+      document.title = title
+    }
   } catch (e) {
     records.value = []
+    topicList.value = []
   } finally {
     loading.value = false
   }

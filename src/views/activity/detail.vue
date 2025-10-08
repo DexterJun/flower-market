@@ -94,6 +94,11 @@ onMounted(async () => {
     if (!res.ok) throw new Error('network')
     const data: ActivityDetail = await res.json()
     detail.value = data
+
+    // 设置网页标题为活动名称
+    if (data.title) {
+      document.title = data.title
+    }
   } catch (e) {
     detail.value = null
   } finally {
