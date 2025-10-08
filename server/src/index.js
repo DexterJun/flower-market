@@ -21,6 +21,30 @@ console.log('  OSS_BUCKET:', process.env.OSS_BUCKET ? '✅' : '❌');
 console.log('  ACCESS_KEY_ID:', process.env.ALIBABA_CLOUD_ACCESS_KEY_ID ? '✅' : '❌');
 console.log('  ACCESS_KEY_SECRET:', process.env.ALIBABA_CLOUD_ACCESS_KEY_SECRET ? '✅' : '❌');
 
+// 测试OSS连接
+console.log('\\n🧪 测试OSS连接...');
+try {
+  const OSS = require('ali-oss');
+  const ossClient = new OSS({
+    region: process.env.OSS_REGION,
+    accessKeyId: process.env.ALIBABA_CLOUD_ACCESS_KEY_ID,
+    accessKeySecret: process.env.ALIBABA_CLOUD_ACCESS_KEY_SECRET,
+    bucket: process.env.OSS_BUCKET,
+  });
+  console.log('✅ OSS客户端创建成功');
+
+  // 测试列出文件
+  ossClient.list({ 'max-keys': 1, prefix: 'hymn-image/', delimiter: '' })
+    .then(result => {
+      console.log('✅ OSS连接测试成功，找到文件:', result.objects ? result.objects.length : 0);
+    })
+    .catch(error => {
+      console.error('❌ OSS连接测试失败:', error.message);
+    });
+} catch (error) {
+  console.error('❌ OSS客户端创建失败:', error.message);
+}
+
 // 导入共享的业务逻辑处理器和适配器
 const {
   healthHandler,
