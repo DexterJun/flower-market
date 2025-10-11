@@ -13,9 +13,8 @@
     <div class="hymn-container">
       <masonry-wall :items="filteredHymnList" :column-width="columnWidth" :gap="10" :rtl="false">
         <template #default="{ item }">
-          <div class="image-card">
-            <img :src="item.url" :alt="item.filename" loading="lazy" decoding="async" @load="onImageLoad"
-              @click="handleItemClick(item)" />
+          <div class="image-card" @click="goToDetail(item)">
+            <img :src="item.url" :alt="item.filename" loading="lazy" decoding="async" @load="onImageLoad" />
             <div class="image-title">{{ item.filename }}</div>
           </div>
         </template>
@@ -61,15 +60,11 @@
       </div>
     </div>
   </div>
-  <!-- 全屏查看：改用通用移动端图片预览组件 -->
-  <MobileImageViewer v-model="isFullscreen" :images="activeItem ? [activeItem.url] : []" :start-index="0" />
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
-// @ts-ignore
-import MobileImageViewer from '@/components/MobileImageViewer.vue'
-// 路由不再用于详情跳转
+import { useRouter } from 'vue-router';
 // @ts-ignore
 import MasonryWall from '@/components/masonry-wall.vue';
 // @ts-ignore
@@ -91,7 +86,7 @@ interface PaginationInfo {
   nextMarker: string | null;
 }
 
-// 不再使用路由跳转详情
+const router = useRouter();
 
 // 搜索相关
 const searchQuery = ref('');
@@ -285,19 +280,11 @@ const onImageLoad = () => {
   // 瀑布流会自动处理重排
 };
 
-// 全屏查看状态
-const isFullscreen = ref(false);
-const activeItem = ref<HymnItem | null>(null);
-
-// 处理图片点击 - 列表内全屏展示
-const handleItemClick = (item: HymnItem) => {
-  activeItem.value = item;
-  isFullscreen.value = true;
-};
-
-const closeFullscreen = () => {
-  isFullscreen.value = false;
-  activeItem.value = null;
+// 跳转到详情页
+const goToDetail = (item: HymnItem) => {
+  if (item.id) {
+    router.push({ name: 'HymnDetail', params: { id: item.id } });
+  }
 };
 
 // 抽屉状态

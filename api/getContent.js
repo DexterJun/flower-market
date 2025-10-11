@@ -5,5 +5,5 @@ module.exports = createVercelHandler(getContentHandler);
 
 module.exports.config = {
   runtime: 'nodejs20.x',
-  includeFiles: ['api/catalog.json']
+  includeFiles: ['api/hymnData/hymnList.json']
 };

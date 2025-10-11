@@ -16,6 +16,14 @@ const router = createRouter({
       },
     },
     {
+      path: "/hymn/:id",
+      name: "HymnDetail",
+      component: () => import("@/views/hymn/detail.vue"),
+      meta: {
+        title: "歌曲详情",
+      },
+    },
+    {
       path: "/activity",
       name: "Activity",
       component: () => import("@/views/activity/index.vue"),

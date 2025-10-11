@@ -52,7 +52,8 @@ const {
   getImagesHandler,
   searchImagesHandler,
   getActivityListHandler,
-  getActivityDetailHandler
+  getActivityDetailHandler,
+  getHymnDetailHandler
 } = require('../../lib/handlers');
 const { createExpressHandler, corsMiddleware } = require('../../lib/express-adapter');
 
@@ -69,6 +70,7 @@ app.get('/api/images', createExpressHandler(getImagesHandler));
 app.get('/api/search', createExpressHandler(searchImagesHandler));
 app.get('/api/activityList', createExpressHandler(getActivityListHandler));
 app.get('/api/activityDetail', createExpressHandler(getActivityDetailHandler));
+app.get('/api/hymn/detail', createExpressHandler(getHymnDetailHandler));
 
 // 开发环境：托管根项目下的 api 目录中的静态数据文件（如 meetingData/*.json）
 // 放在动态路由之后，避免覆盖现有动态接口
@@ -86,7 +88,8 @@ app.get('/', (req, res) => {
       'GET /api/health - 健康检查',
       'GET /api/getContent - 获取目录内容',
       'GET /api/images - 获取图片列表',
-      'GET /api/search - 搜索图片'
+      'GET /api/search - 搜索图片',
+      'GET /api/hymn/detail - 获取歌曲详情'
     ]
   });
 });

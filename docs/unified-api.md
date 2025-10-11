@@ -18,7 +18,8 @@ flower-market/
 │   ├── vercel-adapter.js        # Vercel Functions适配器
 │   └── express-adapter.js       # Express适配器
 ├── api/                         # Vercel Functions (生产环境)
-│   ├── catalog.json            # 数据文件
+│   ├── hymnData/
+│   │   └── hymnList.json        # 数据文件
 │   ├── health.js               # 使用共享逻辑
 │   ├── images.js               # 使用共享逻辑
 │   └── ...                     # 其他API文件

@@ -227,7 +227,7 @@ ALIBABA_CLOUD_ACCESS_KEY_SECRET=your-access-key-secret
 
 ### 📝 注意事项
 
-1. **catalog.json路径**: API从`server/src/catalog.json`读取数据
+1. **hymnList.json路径**: API从`api/hymnData/hymnList.json`读取数据
 2. **OSS配置**: 确保阿里云OSS权限配置正确
 3. **动态路由**: `/api/hymn/detail/:id`通过`[id].js`文件处理
 4. **生产环境路径**: 前端使用相对路径`/api`调用接口
@@ -238,7 +238,7 @@ ALIBABA_CLOUD_ACCESS_KEY_SECRET=your-access-key-secret
 
 1. Vercel函数日志
 2. 环境变量是否正确设置
-3. catalog.json文件是否存在
+3. hymnList.json文件是否存在
 4. OSS访问权限是否正常
 
 部署完成后，所有API接口都应该能正常工作！ 

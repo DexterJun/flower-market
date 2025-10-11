@@ -8,6 +8,18 @@
     },
     "api/meetingData/*.js": {
       "includeFiles": "api/meetingData/*.json"
+    },
+    "api/getContent.js": {
+      "includeFiles": "api/hymnData/*.json"
+    },
+    "api/images.js": {
+      "includeFiles": "api/hymnData/*.json"
+    },
+    "api/search.js": {
+      "includeFiles": "api/hymnData/*.json"
+    },
+    "api/hymn/detail.js": {
+      "includeFiles": "api/hymnData/*.json"
     }
   },
   "rewrites": [
