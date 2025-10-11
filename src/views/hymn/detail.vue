@@ -77,7 +77,7 @@
         </div>
         <div class="image-container" @click="showFullImage = true">
           <img :src="hymnDetail.detail.hymnUrl" :alt="hymnDetail.detail.filename" class="hymn-image" />
-          <div class="image-overlay">
+          <!-- <div class="image-overlay">
             <div class="zoom-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -88,7 +88,7 @@
               </svg>
             </div>
             <div class="zoom-text">点击查看大图</div>
-          </div>
+          </div> -->
         </div>
       </div>
 
@@ -499,7 +499,7 @@ onMounted(() => {
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 24px;
-  padding: 15px 32px;
+  padding: 12px 32px;
   text-align: center;
   margin-bottom: 32px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
@@ -520,7 +520,7 @@ onMounted(() => {
 }
 
 .hymn-title {
-  font-size: 36px;
+  font-size: 30px;
   font-weight: 700;
   color: #4a5568;
   margin-bottom: 16px;
@@ -782,12 +782,12 @@ onMounted(() => {
   }
 
   .title-card {
-    padding: 15px 24px;
+    padding: 13px 24px;
     margin-bottom: 24px;
   }
 
   .hymn-title {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   .image-card,
@@ -842,7 +842,7 @@ onMounted(() => {
 
 @media screen and (max-width: 480px) {
   .hymn-title {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .card-title {
