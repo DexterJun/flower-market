@@ -1,6 +1,9 @@
 /*
 格式化歌词工具，终端执行
 将多行文本转换为单行字符串，换行符为 \n
+结束输入：
+macOS / Linux：按 Ctrl + D
+Windows：按 Ctrl + Z 然后按 Enter
 */
 
 let inputChunks = [];

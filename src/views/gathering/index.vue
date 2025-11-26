@@ -36,17 +36,39 @@ const router = useRouter()
 const topicList = ref<TopicListItem[]>([])
 const loading = ref<boolean>(false)
 
+// 颜色主题数组，按顺序循环使用
+const themeClasses = [
+  'theme-free',      // 粉色 - 自由主题
+  'theme-holy',      // 蓝色 - 圣洁
+  'theme-justice',   // 青色 - 公义
+  'theme-regenerate', // 绿色 - 重生
+  'theme-prayer',    // 紫色 - 祷告
+  'theme-church',    // 黄色 - 教会
+  'theme-endtime',   // 红色 - 末世
+  'theme-love',      // 粉色 - 爱
+  'theme-generic',   // 灰色 - 通用
+]
+
+// 简单的字符串哈希函数，将主题名称转换为数字
+const hashString = (str: string): number => {
+  let hash = 0
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash = hash & hash // 转换为32位整数
+  }
+  return Math.abs(hash)
+}
+
 const themeClass = (topic: string) => {
   const key = (topic || '').trim()
-  if (!key) return 'theme-free'
-  if (key.includes('圣洁')) return 'theme-holy'
-  if (key.includes('公义')) return 'theme-justice'
-  if (key.includes('重生')) return 'theme-regenerate'
-  if (key.includes('祷告')) return 'theme-prayer'
-  if (key.includes('教会')) return 'theme-church'
-  if (key.includes('末世')) return 'theme-endtime'
-  if (key.includes('爱')) return 'theme-love'
-  return 'theme-generic'
+  // 空主题使用第一个颜色（粉色）
+  if (!key) return themeClasses[0]
+
+  // 基于主题名称的哈希值选择颜色，确保相同主题总是得到相同颜色
+  const hash = hashString(key)
+  const index = hash % themeClasses.length
+  return themeClasses[index]
 }
 
 const goDetail = (id: string) => {
