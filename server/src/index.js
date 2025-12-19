@@ -53,7 +53,8 @@ const {
   searchImagesHandler,
   getActivityListHandler,
   getActivityDetailHandler,
-  getHymnDetailHandler
+  getHymnDetailHandler,
+  getDramaVideoHandler
 } = require('../../lib/handlers');
 const { createExpressHandler, corsMiddleware } = require('../../lib/express-adapter');
 
@@ -71,6 +72,7 @@ app.get('/api/search', createExpressHandler(searchImagesHandler));
 app.get('/api/activityList', createExpressHandler(getActivityListHandler));
 app.get('/api/activityDetail', createExpressHandler(getActivityDetailHandler));
 app.get('/api/hymn/detail', createExpressHandler(getHymnDetailHandler));
+app.get('/api/drama/video', createExpressHandler(getDramaVideoHandler));
 
 // 开发环境：托管根项目下的 api 目录中的静态数据文件（如 meetingData/*.json）
 // 放在动态路由之后，避免覆盖现有动态接口

@@ -55,6 +55,14 @@ const router = createRouter({
         title: "聚会详情",
       },
     },
+    {
+      path: "/drama",
+      name: "Drama",
+      component: () => import("@/views/drama/index.vue"),
+      meta: {
+        title: "圣剧：起来建造",
+      },
+    },
   ],
 });
 
