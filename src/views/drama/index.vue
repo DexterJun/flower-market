@@ -22,13 +22,29 @@
         </h2>
       </div>
       <div class="video-container">
-        <video 
-          :src="videoUrl" 
-          class="drama-video" 
-          controls 
-          preload="metadata"
-          poster=""
-        ></video>
+        <div class="video-wrapper">
+          <video ref="videoElement" :src="videoUrl" class="drama-video" controls preload="auto" playsinline
+            webkit-playsinline x5-playsinline x5-video-player-type="h5" x5-video-player-fullscreen="true"
+            @loadstart="onVideoLoadStart" @progress="onVideoProgress" @waiting="onVideoWaiting"
+            @canplay="onVideoCanPlay" @canplaythrough="onVideoCanPlayThrough" @playing="onVideoPlaying"
+            @timeupdate="onVideoTimeUpdate" @seeked="onVideoSeeked" @error="onVideoError"></video>
+
+          <!-- 缓冲进度条 -->
+          <div v-if="buffering" class="buffering-overlay">
+            <div class="buffering-content">
+              <van-loading type="spinner" color="#ff6b9d" size="24px"></van-loading>
+              <p class="buffering-text">正在缓冲中...</p>
+              <p v-if="bufferedPercent > 0" class="buffered-percent">
+                已缓冲 {{ Math.round(bufferedPercent) }}%
+              </p>
+            </div>
+          </div>
+
+          <!-- 缓冲进度指示器 -->
+          <div v-if="bufferedPercent > 0 && bufferedPercent < 99.5 && !buffering" class="buffer-indicator">
+            <div class="buffer-bar" :style="{ width: `${bufferedPercent}%` }"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -46,18 +62,8 @@
         </h2>
       </div>
       <div class="gallery-grid">
-        <div 
-          v-for="(img, idx) in images" 
-          :key="idx" 
-          class="gallery-item"
-          @click="openViewer(idx)"
-        >
-          <img 
-            :src="img" 
-            :alt="`排练花絮 ${idx + 1}`" 
-            class="gallery-image"
-            loading="lazy"
-          />
+        <div v-for="(img, idx) in images" :key="idx" class="gallery-item" @click="openViewer(idx)">
+          <img :src="img" :alt="`排练花絮 ${idx + 1}`" class="gallery-image" loading="lazy" />
           <div class="gallery-overlay">
             <span class="gallery-icon">🔍</span>
           </div>
@@ -66,17 +72,12 @@
     </div>
 
     <!-- 全屏图片预览 -->
-    <MobileImageViewer 
-      v-model="showViewer" 
-      :images="images" 
-      :start-index="currentIndex" 
-      @change="onIndexChange" 
-    />
+    <MobileImageViewer v-model="showViewer" :images="images" :start-index="currentIndex" @change="onIndexChange" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, onBeforeUnmount } from 'vue'
 // @ts-ignore
 import MobileImageViewer from '@/components/MobileImageViewer.vue'
 
@@ -89,6 +90,13 @@ const images = computed(() => {
 // 视频相关
 const videoUrl = ref<string | null>(null)
 const videoLoading = ref(false)
+const videoElement = ref<HTMLVideoElement | null>(null)
+
+// 缓冲相关
+const buffering = ref(false)
+const bufferedPercent = ref(0)
+let bufferingTimer: number | null = null
+let progressTimer: number | null = null
 
 // 图片预览
 const showViewer = ref(false)
@@ -103,6 +111,203 @@ const onIndexChange = (i: number) => {
   currentIndex.value = i
 }
 
+// 更新缓冲进度
+const updateBufferedProgress = () => {
+  if (!videoElement.value) return
+
+  const video = videoElement.value
+  if (video.buffered.length > 0 && video.duration > 0) {
+    const bufferedEnd = video.buffered.end(video.buffered.length - 1)
+    bufferedPercent.value = (bufferedEnd / video.duration) * 100
+  }
+}
+
+// 视频事件处理
+const onVideoLoadStart = () => {
+  buffering.value = true
+  bufferedPercent.value = 0
+}
+
+const onVideoProgress = () => {
+  updateBufferedProgress()
+  // 如果正在播放，隐藏缓冲提示（静静地缓冲）
+  if (videoElement.value && !videoElement.value.paused) {
+    buffering.value = false
+  }
+}
+
+const onVideoWaiting = () => {
+  // 视频等待数据时，延迟显示缓冲提示（避免短暂卡顿也显示）
+  if (bufferingTimer) {
+    clearTimeout(bufferingTimer)
+  }
+  // 延迟500ms显示，如果还在等待才显示
+  bufferingTimer = window.setTimeout(() => {
+    if (videoElement.value && videoElement.value.readyState < 3) {
+      // 只有在真正等待数据时才显示
+      buffering.value = true
+    }
+  }, 500)
+}
+
+const onVideoCanPlay = () => {
+  // 可以播放时，隐藏缓冲提示
+  updateBufferedProgress()
+  buffering.value = false
+}
+
+const onVideoCanPlayThrough = () => {
+  // 可以流畅播放时隐藏缓冲提示
+  buffering.value = false
+  updateBufferedProgress()
+}
+
+const onVideoPlaying = () => {
+  // 开始播放时，隐藏缓冲提示，静静地继续缓冲
+  buffering.value = false
+  updateBufferedProgress()
+}
+
+// 播放时间更新时，继续缓冲（静默，不显示提示）
+const onVideoTimeUpdate = () => {
+  updateBufferedProgress()
+  // 播放时持续触发缓冲，但不显示提示
+  if (videoElement.value && !videoElement.value.paused) {
+    triggerBuffering()
+    // 确保播放时不显示缓冲提示
+    buffering.value = false
+  }
+}
+
+// 跳转后继续缓冲
+const onVideoSeeked = () => {
+  updateBufferedProgress()
+  // 跳转后立即触发缓冲
+  if (videoElement.value) {
+    triggerBuffering()
+  }
+}
+
+const onVideoError = (e: Event) => {
+  console.error('视频加载错误:', e)
+  buffering.value = false
+}
+
+// 主动触发视频缓冲（持续缓冲直到整个视频下载完成）
+let lastBufferingTrigger = 0
+const triggerBuffering = () => {
+  if (!videoElement.value || !videoElement.value.duration) return
+
+  const video = videoElement.value
+  const duration = video.duration
+
+  // 限制触发频率，避免过于频繁
+  const now = Date.now()
+  if (now - lastBufferingTrigger < 500) return // 每500ms最多触发一次
+  lastBufferingTrigger = now
+
+  // 检查是否已经完全加载
+  if (video.buffered.length > 0) {
+    const bufferedEnd = video.buffered.end(video.buffered.length - 1)
+
+    // 如果已经缓冲到视频末尾，不需要继续触发
+    if (bufferedEnd >= duration - 0.5) {
+      console.log('✅ 视频已完全缓冲')
+      return
+    }
+  }
+
+  // 如果视频还没完全加载，持续触发缓冲
+  if (video.readyState < 4) {
+    // 通过读取 buffered 和 readyState 属性来触发浏览器继续加载
+    // 浏览器会自动继续缓冲后续内容
+    void video.buffered
+    void video.readyState
+
+    // 如果网络状态是空闲，尝试触发继续加载
+    if (video.networkState === 1) { // NETWORK_IDLE - 网络空闲
+      // 访问这些属性会触发浏览器继续预加载
+      // 浏览器会根据 preload="auto" 继续加载后续内容
+      void video.duration
+      void video.buffered.length
+
+      // 持续触发直到完全加载
+      if (video.buffered.length > 0) {
+        const bufferedEnd = video.buffered.end(video.buffered.length - 1)
+        const bufferedPercent = (bufferedEnd / duration) * 100
+        console.log(`🔄 持续缓冲中... ${bufferedPercent.toFixed(1)}%`)
+      }
+    }
+  } else {
+    // readyState === 4 表示已经有足够的数据可以流畅播放
+    // 但仍需检查是否完全下载
+    if (video.buffered.length > 0) {
+      const bufferedEnd = video.buffered.end(video.buffered.length - 1)
+      if (bufferedEnd < duration - 0.5) {
+        // 继续缓冲剩余部分
+        void video.buffered
+        void video.networkState
+      }
+    }
+  }
+}
+
+// 定期更新缓冲进度
+const startProgressMonitoring = () => {
+  if (progressTimer) {
+    clearInterval(progressTimer)
+  }
+  progressTimer = window.setInterval(() => {
+    if (videoElement.value) {
+      updateBufferedProgress()
+
+      const video = videoElement.value
+
+      // 无论播放还是暂停，都持续触发缓冲，直到完全下载
+      triggerBuffering()
+
+      // 如果正在播放，静默缓冲（不显示提示）
+      if (!video.paused) {
+        // 播放时隐藏缓冲提示，静静地缓冲
+        buffering.value = false
+      } else {
+        // 暂停时，检查是否在等待缓冲
+        // 只有在真正等待数据时才显示提示
+        if (video.readyState < 3 && video.networkState === 2) {
+          // 网络正在加载但数据不足
+          buffering.value = true
+        } else {
+          buffering.value = false
+        }
+      }
+    }
+  }, 500) // 每500ms检查一次，持续缓冲直到完成
+}
+
+// 检测网络连接速度并优化预加载
+const optimizeVideoLoading = () => {
+  if (!videoElement.value || !('connection' in navigator)) return
+
+  const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection
+  if (connection) {
+    // 根据网络速度调整预加载策略
+    const effectiveType = connection.effectiveType
+    const downlink = connection.downlink || 10 // 默认假设10Mbps
+
+    // 慢速网络：减少预加载
+    if (effectiveType === 'slow-2g' || effectiveType === '2g' || downlink < 1.5) {
+      if (videoElement.value) {
+        videoElement.value.preload = 'metadata'
+      }
+    } else {
+      // 快速网络：启用自动预加载
+      if (videoElement.value) {
+        videoElement.value.preload = 'auto'
+      }
+    }
+  }
+}
+
 // 获取视频链接
 const fetchVideoUrl = async () => {
   try {
@@ -114,6 +319,11 @@ const fetchVideoUrl = async () => {
     const data = await res.json()
     if (data.success && data.videoUrl) {
       videoUrl.value = data.videoUrl
+      // 视频URL设置后，优化加载策略并开始监控进度
+      setTimeout(() => {
+        optimizeVideoLoading()
+        startProgressMonitoring()
+      }, 1000)
     }
   } catch (error) {
     console.error('获取视频失败:', error)
@@ -126,6 +336,15 @@ onMounted(() => {
   fetchVideoUrl()
   // 设置页面标题
   document.title = '圣剧：起来建造'
+})
+
+onBeforeUnmount(() => {
+  if (bufferingTimer) {
+    clearTimeout(bufferingTimer)
+  }
+  if (progressTimer) {
+    clearInterval(progressTimer)
+  }
 })
 </script>
 
@@ -150,9 +369,12 @@ onMounted(() => {
 }
 
 @keyframes gradientShift {
-  0%, 100% {
+
+  0%,
+  100% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
@@ -161,7 +383,7 @@ onMounted(() => {
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     radial-gradient(ellipse at 20% 30%, rgba(255, 255, 255, 0.3) 0, transparent 50%),
     radial-gradient(ellipse at 80% 70%, rgba(255, 255, 255, 0.2) 0, transparent 50%),
     radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.15) 0, transparent 60%);
@@ -276,11 +498,71 @@ onMounted(() => {
   box-shadow: 0 12px 32px rgba(255, 107, 157, 0.25);
 }
 
-.drama-video {
+.video-wrapper {
+  position: relative;
   width: 100%;
-  display: block;
   background: #000;
   aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.drama-video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+/* 缓冲覆盖层 */
+.buffering-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+  /* 允许点击穿透到视频控件 */
+}
+
+.buffering-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+}
+
+.buffering-text {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.buffered-percent {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+/* 缓冲进度指示器 */
+.buffer-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  z-index: 5;
+}
+
+.buffer-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #ff6b9d, #f8b500);
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px rgba(255, 107, 157, 0.5);
 }
 
 .video-loading {
@@ -385,4 +667,3 @@ onMounted(() => {
   }
 }
 </style>
-
